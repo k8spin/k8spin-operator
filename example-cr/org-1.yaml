@@ -1,0 +1,14 @@
+apiVersion: k8spin.cloud/v1
+kind: Organization
+metadata:
+  name: example
+spec:
+  resources:
+    cpu: "10"
+    memory: "10G"
+  # By default the organization name could be used to access the organization if the certificate include the name in the certificate filed O=
+  roles:
+    - name: organization-admin # Cluster Role
+      groups: ["K8Spin.cloud"] # User Certificate O=
+    - name: organization-admin # Cluster Role
+      users: ["Angel", "Pau"] # User Certificate CN=

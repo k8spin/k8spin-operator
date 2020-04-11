@@ -1,0 +1,12 @@
+---
+apiVersion: k8spin.cloud/v1
+kind: Organization
+metadata:
+  name: test-2
+spec:
+  roles:
+  - name: organization-admin
+    groups: ["k8spin"]
+  resources:
+    cpu: "10"
+    memory: "10G"

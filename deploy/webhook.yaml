@@ -1,0 +1,209 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8spin-webhook
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: k8spin-webhook
+  template:
+    metadata:
+      labels:
+        application: k8spin-webhook
+    spec:
+      serviceAccountName: k8spin-webhook
+      containers:
+      - name: k8spin-webhook
+        image: k8spin/k8spin-webhook:dev
+        ports:
+        - containerPort: 443
+        env:
+        - name: LOGGING_LEVEL
+          value: DEBUG
+        volumeMounts:
+        - name: tls
+          mountPath: "/certs"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 443
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 1
+          successThreshold: 2
+          failureThreshold: 1
+        livenessProbe:
+          tcpSocket:
+            port: 443
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 1
+      volumes:
+      - name: tls
+        secret:
+          secretName: k8spin-webhook
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8spin-webhook
+  namespace: default
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    application: k8spin-webhook
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8spin-webhook
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: k8spin-webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: k8spin-webhook
+    namespace: default
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: k8spin-webhook-cert
+  namespace: default
+spec:
+  dnsNames:
+  - k8spin-webhook.default.svc
+  - k8spin-webhook.default.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: k8spin-webhook-issuer
+  secretName: k8spin-webhook
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: k8spin-webhook-issuer
+  namespace: default
+spec:
+  selfSigned: {}
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: default/k8spin-webhook-cert
+  name: validating-k8spin
+  namespace: default
+webhooks:
+  - name: validating.tenants.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /validator/tenants
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "tenants"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: validating.spaces.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /validator/spaces
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "spaces"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: default/k8spin-webhook-cert
+  name: mutating-k8spin
+  namespace: default
+webhooks:
+  - name: mutating.organizations.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /mutator/organizations
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "organizations"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: mutating.tenants.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /mutator/tenants
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "tenants"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: mutating.spaces.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /mutator/spaces
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "spaces"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE

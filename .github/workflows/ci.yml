@@ -1,0 +1,40 @@
+name: "CI"
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v.*
+            
+jobs:
+  e2e_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: engineerd/setup-kind@v0.3.0
+      with:
+          version: "v0.7.0"
+          skipClusterCreation: "true"
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade virtualenv
+    - name: Execute E2E tests
+      run: |
+        make test-e2e
+    - name: Upload E2E logs
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: e2elogs
+        path: e2elogs
+    - name: Publish image
+      run: |
+        docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+        make TAG_VERSION=${GITHUB_REF##*/} publish_dockerhub
+        make TAG_VERSION=dev publish_dockerhub
+        make TAG_VERSION=latest publish_dockerhub

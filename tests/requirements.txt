@@ -1,0 +1,6 @@
+pytest
+pytest-kind
+requests
+requests-html
+python-slugify
+#pytest-parallel

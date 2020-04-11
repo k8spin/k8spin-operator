@@ -1,0 +1,15 @@
+.venv-operator
+.venv-validator
+.venv-test
+.venv
+.kube
+.pytest_cache
+.pytest-kind
+.vscode
+
+e2elogs
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+**/*.egg-info

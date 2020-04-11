@@ -1,0 +1,5 @@
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: default
+  name: platform-pro

@@ -1,0 +1,77 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: spaces.k8spin.cloud
+spec:
+  scope: Namespaced
+  group: k8spin.cloud
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required:
+          - spec
+          properties:
+            spec:
+              type: object
+              required:
+              - resources
+              - containers
+              properties:
+                roles:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      groups:
+                        type: array
+                        items:
+                          type: string
+                      users:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - name
+                resources:
+                  type: object
+                  required:
+                  - cpu
+                  - memory
+                  properties:
+                    cpu:
+                      type: string
+                    memory:
+                      type: string
+                containers:
+                  type: object
+                  required:
+                    - defaults
+                  properties:
+                    defaults:
+                      type: object
+                      required:
+                        - resources
+                      properties:
+                        resources:
+                          type: object
+                          required:
+                          - cpu
+                          - memory
+                          properties:
+                            cpu:
+                              type: string
+                            memory:
+                              type: string
+  names:
+    kind: Space
+    plural: spaces
+    singular: space
+    shortNames:
+      - spcs
+      - sp

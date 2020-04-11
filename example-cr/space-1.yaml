@@ -1,0 +1,19 @@
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-example-tenant-crm
+  name: dev
+spec:
+  resources:
+    cpu: "2"
+    memory: "1G"
+  roles:
+    - name: space-admin # Cluster Role
+      groups: ["K8Spin.cloud"] # User Certificate O=
+    - name: space-viewer # Cluster Role
+      users: ["Angel", "Pau"] # User Certificate CN=
+  containers:
+    defaults:
+      resources:
+        cpu: 10m
+        memory: 64Mi

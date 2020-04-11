@@ -1,0 +1,30 @@
+---
+apiVersion: k8spin.cloud/v1
+kind: Tenant
+metadata:
+  namespace: org-test-2
+  name: las-rozas
+spec:
+  roles:
+  - name: tenant-admin
+    users: ["pau"]
+  - name: tenant-viewer
+    users: ["angel"]
+  resources:
+    cpu: "5"
+    memory: "5G"
+---
+apiVersion: k8spin.cloud/v1
+kind: Tenant
+metadata:
+  namespace: org-test-2
+  name: getafe
+spec:
+  roles:
+  - name: tenant-viewer
+    users: ["pau"]
+  - name: tenant-admin
+    users: ["angel"]
+  resources:
+    cpu: "5"
+    memory: "5G"

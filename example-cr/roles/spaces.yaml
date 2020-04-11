@@ -1,0 +1,40 @@
+---
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-test-2-tenant-las-rozas
+  name: app-1
+spec:
+  roles:
+  - name: space-admin
+    users: ["pau"]
+  - name: space-viewer
+    users: ["angel"]
+  resources:
+    cpu: "5"
+    memory: "5G"
+  containers:
+    defaults:
+      resources:
+        cpu: "10m"
+        memory: "32Mi"
+---
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-test-2-tenant-getafe
+  name: app-1
+spec:
+  roles:
+  - name: space-viewer
+    users: ["pau"]
+  - name: space-admin
+    users: ["angel"]
+  resources:
+    cpu: "5"
+    memory: "5G"
+  containers:
+    defaults:
+      resources:
+        cpu: "10m"
+        memory: "32Mi"

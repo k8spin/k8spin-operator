@@ -1,0 +1,14 @@
+apiVersion: k8spin.cloud/v1
+kind: Tenant
+metadata:
+  namespace: org-example
+  name: crm
+spec:
+  resources:
+    cpu: "3"
+    memory: "3G"
+  roles:
+    - name: tenant-admin # Cluster Role
+      groups: ["K8Spin.cloud"] # User Certificate O=
+    - name: tenant-viewer # Cluster Role
+      users: ["Angel", "Pau"] # User Certificate CN=
