@@ -5,7 +5,7 @@ on:
     branches:
       - master
     tags:
-      - v.*
+      - v*
             
 jobs:
   e2e_and_publish:
