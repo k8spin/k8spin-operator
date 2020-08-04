@@ -72,3 +72,9 @@ publish_dockerhub:
 clean:
 	@rm -rf .kube .pytest_cache .pytest-kind .venv-test e2elogs
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+
+.PHONY: kubectl_plugin
+## kubectl_plugin: installs the plugin in /usr/local/bin/kubectl-k8spin. Requires root privileges
+kubectl_plugin:
+	@cp kubectl-k8spin.py /usr/local/bin/kubectl-k8spin
+	@chmod +x /usr/local/bin/kubectl-k8spin
