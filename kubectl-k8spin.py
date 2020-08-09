@@ -104,6 +104,11 @@ def get_tenant(arg: CommandArguments):
     execute_get_command(command, TENANT)
 
 
+def delete_tenant(arg: CommandArguments):
+    command = f"kubectl delete tenant {arg.tenant} -n org-{arg.org}"
+    execute_command(command)
+
+
 def get_space(arg: CommandArguments):
     org = arg.org
     tenant = arg.tenant
@@ -115,6 +120,11 @@ def get_space(arg: CommandArguments):
 
     command = f"kubectl get space {space} -o json {opts}"
     execute_get_command(command, SPACE)
+
+
+def delete_space(arg: CommandArguments):
+    command = f"kubectl delete space {arg.space} -n org-{arg.org}-tenant-{arg.tenant}"
+    execute_command(command)
 
 
 # Parent parser
@@ -187,8 +197,18 @@ delete_org_parser.add_argument("org_name", nargs="?", default="")
 delete_tenant_parser = delete_commands.add_parser(
     "tenant", help="Tenant")
 
+delete_tenant_parser.add_argument("tenant_name", nargs="?", default="")
+delete_tenant_parser.add_argument("--org", metavar="org", dest="org_name",
+                                  help="Filter by Organization", required=True)
+
 delete_space_parser = delete_commands.add_parser(
     "space", help="Space")
+
+delete_space_parser.add_argument("space_name", nargs="?", default="")
+delete_space_parser.add_argument("--org", metavar="org", dest="org_name",
+                                 help="Filter by Organization", required=True)
+delete_space_parser.add_argument("--tenant", metavar="tenant", dest="tenant_name",
+                                 help="Filter by Tenant", required=True)
 
 
 # Parsing
