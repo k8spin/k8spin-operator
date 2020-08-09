@@ -28,11 +28,12 @@ SPACE = {
 
 
 class CommandArguments():
-    def __init__(self, org=None, tenant=None, space=None, namespace=None):
+    def __init__(self, org=None, tenant=None, space=None, cpu=None, memory=None):
         self.org = org
         self.tenant = tenant
         self.space = space
-        self.namespace = namespace
+        self.cpu = cpu
+        self.memory = memory
 
 
 def extract_from_dictionary(dictionary, *keys_or_indexes):
@@ -67,13 +68,35 @@ def execute_get_command(command, kind):
         print(result.stderr.decode("utf-8"))
 
 
-def execute_command(command):
+def execute_command(command, input=None):
     result = subprocess.run(
-        filter(None, command.split(" ")), capture_output=True)
+        filter(None, command.split(" ")), capture_output=True, input=input)
     if result.returncode == 0:
         print(result.stdout.decode("utf-8"))
     else:
         print(result.stderr.decode("utf-8"))
+
+
+def execute_apply_command(json_manifest):
+    command = "kubectl apply -f -"
+    execute_command(command, json.dumps(json_manifest).encode("utf-8"))
+
+
+def create_org(arg: CommandArguments):
+    new_org = {
+        "kind": "Organization",
+        "apiVersion": "k8spin.cloud/v1",
+        "metadata": {
+            "name": arg.org
+        },
+        "spec": {
+            "resources": {
+                "cpu": arg.cpu,
+                "memory": arg.memory
+            }
+        }
+    }
+    execute_apply_command(new_org)
 
 
 def get_org(arg: CommandArguments):
@@ -183,6 +206,13 @@ get_space_parser.add_argument("--org", metavar="org", dest="org_name",
 create_org_parser = create_commands.add_parser(
     "org", help="Organization")
 
+create_org_parser.add_argument("org_name")
+create_org_parser.add_argument("--cpu", metavar="cpu", dest="cpu",
+                               help="CPU Amount", required=True)
+create_org_parser.add_argument("--memory", metavar="memory", dest="memory",
+                               help="Memory Amount", required=True)
+
+
 create_tenant_parser = create_commands.add_parser(
     "tenant", help="Tenant")
 
@@ -223,7 +253,10 @@ if command and sub_command:
     tenant = main_args.tenant_name if hasattr(
         main_args, "tenant_name") else None
     space = main_args.space_name if hasattr(main_args, "space_name") else None
-    arg = CommandArguments(org=org, tenant=tenant, space=space)
+    cpu = main_args.cpu if hasattr(main_args, "cpu") else None
+    memory = main_args.memory if hasattr(main_args, "memory") else None
+    arg = CommandArguments(org=org, tenant=tenant,
+                           space=space, cpu=cpu, memory=memory)
     method_to_call = locals()[f"{command}_{sub_command}"]
     method_to_call(arg)
 else:
