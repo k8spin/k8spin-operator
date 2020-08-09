@@ -23,17 +23,21 @@ SPACE = {
     "Tenant": ("metadata", "labels", "k8spin.cloud/tenant"),
     "Name": ("metadata", "name"),
     "CPU": ("spec", "resources", "cpu"),
-    "Memory": ("spec", "resources", "memory")
+    "Memory": ("spec", "resources", "memory"),
+    "Default CPU": ("spec", "containers", "defaults", "resources", "cpu"),
+    "Default Memory": ("spec", "containers", "defaults", "resources", "memory")
 }
 
 
 class CommandArguments():
-    def __init__(self, org=None, tenant=None, space=None, cpu=None, memory=None):
+    def __init__(self, org=None, tenant=None, space=None, cpu=None, memory=None, def_cpu=None, def_memory=None):
         self.org = org
         self.tenant = tenant
         self.space = space
         self.cpu = cpu
         self.memory = memory
+        self.def_cpu = def_cpu
+        self.def_memory = def_memory
 
 
 def extract_from_dictionary(dictionary, *keys_or_indexes):
@@ -83,7 +87,7 @@ def execute_apply_command(json_manifest):
 
 
 def create_org(arg: CommandArguments):
-    new_org = {
+    json_manifest = {
         "kind": "Organization",
         "apiVersion": "k8spin.cloud/v1",
         "metadata": {
@@ -96,7 +100,7 @@ def create_org(arg: CommandArguments):
             }
         }
     }
-    execute_apply_command(new_org)
+    execute_apply_command(json_manifest)
 
 
 def get_org(arg: CommandArguments):
@@ -115,6 +119,24 @@ def delete_org(arg: CommandArguments):
     execute_command(command)
 
 
+def create_tenant(arg: CommandArguments):
+    json_manifest = {
+        "kind": "Tenant",
+        "apiVersion": "k8spin.cloud/v1",
+        "metadata": {
+            "name": arg.tenant,
+            "namespace": f"org-{arg.org}"
+        },
+        "spec": {
+            "resources": {
+                "cpu": arg.cpu,
+                "memory": arg.memory
+            }
+        }
+    }
+    execute_apply_command(json_manifest)
+
+
 def get_tenant(arg: CommandArguments):
     org = arg.org
     if org:
@@ -130,6 +152,32 @@ def get_tenant(arg: CommandArguments):
 def delete_tenant(arg: CommandArguments):
     command = f"kubectl delete tenant {arg.tenant} -n org-{arg.org}"
     execute_command(command)
+
+
+def create_space(arg: CommandArguments):
+    json_manifest = {
+        "kind": "Space",
+        "apiVersion": "k8spin.cloud/v1",
+        "metadata": {
+            "name": arg.space,
+            "namespace": f"org-{arg.org}-tenant-{arg.tenant}"
+        },
+        "spec": {
+            "resources": {
+                "cpu": arg.cpu,
+                "memory": arg.memory
+            },
+            "containers": {
+                "defaults": {
+                    "resources": {
+                        "cpu": arg.def_cpu,
+                        "memory": arg.def_memory
+                    }
+                }
+            }
+        }
+    }
+    execute_apply_command(json_manifest)
 
 
 def get_space(arg: CommandArguments):
@@ -216,8 +264,32 @@ create_org_parser.add_argument("--memory", metavar="memory", dest="memory",
 create_tenant_parser = create_commands.add_parser(
     "tenant", help="Tenant")
 
+create_tenant_parser.add_argument("tenant_name")
+create_tenant_parser.add_argument("--org", metavar="org", dest="org_name",
+                                  help="Filter by Organization", required=True)
+create_tenant_parser.add_argument("--cpu", metavar="cpu", dest="cpu",
+                                  help="CPU Amount", required=True)
+create_tenant_parser.add_argument("--memory", metavar="memory", dest="memory",
+                                  help="Memory Amount", required=True)
+
+
 create_space_parser = create_commands.add_parser(
     "space", help="Space")
+
+create_space_parser.add_argument("space_name")
+create_space_parser.add_argument("--org", metavar="org", dest="org_name",
+                                 help="Filter by Organization", required=True)
+create_space_parser.add_argument("--tenant", metavar="tenant", dest="tenant_name",
+                                 help="Filter by Tenant", required=True)
+create_space_parser.add_argument("--cpu", metavar="cpu", dest="cpu",
+                                 help="CPU Amount", required=True)
+create_space_parser.add_argument("--memory", metavar="memory", dest="memory",
+                                 help="Memory Amount", required=True)
+create_space_parser.add_argument("--default-cpu", metavar="cpu", dest="def_cpu",
+                                 help="CPU Amount", required=True)
+create_space_parser.add_argument("--default-memory", metavar="memory", dest="def_memory",
+                                 help="Memory Amount", required=True)
+
 
 delete_org_parser = delete_commands.add_parser(
     "org", help="Organization")
@@ -255,8 +327,11 @@ if command and sub_command:
     space = main_args.space_name if hasattr(main_args, "space_name") else None
     cpu = main_args.cpu if hasattr(main_args, "cpu") else None
     memory = main_args.memory if hasattr(main_args, "memory") else None
+    def_cpu = main_args.def_cpu if hasattr(main_args, "def_cpu") else None
+    def_memory = main_args.def_memory if hasattr(
+        main_args, "def_memory") else None
     arg = CommandArguments(org=org, tenant=tenant,
-                           space=space, cpu=cpu, memory=memory)
+                           space=space, cpu=cpu, memory=memory, def_cpu=def_cpu, def_memory=def_memory)
     method_to_call = locals()[f"{command}_{sub_command}"]
     method_to_call(arg)
 else:
