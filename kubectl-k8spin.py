@@ -192,19 +192,19 @@ create_space_parser = create_commands.add_parser(
 delete_org_parser = delete_commands.add_parser(
     "org", help="Organization")
 
-delete_org_parser.add_argument("org_name", nargs="?", default="")
+delete_org_parser.add_argument("org_name")
 
 delete_tenant_parser = delete_commands.add_parser(
     "tenant", help="Tenant")
 
-delete_tenant_parser.add_argument("tenant_name", nargs="?", default="")
+delete_tenant_parser.add_argument("tenant_name")
 delete_tenant_parser.add_argument("--org", metavar="org", dest="org_name",
                                   help="Filter by Organization", required=True)
 
 delete_space_parser = delete_commands.add_parser(
     "space", help="Space")
 
-delete_space_parser.add_argument("space_name", nargs="?", default="")
+delete_space_parser.add_argument("space_name")
 delete_space_parser.add_argument("--org", metavar="org", dest="org_name",
                                  help="Filter by Organization", required=True)
 delete_space_parser.add_argument("--tenant", metavar="tenant", dest="tenant_name",
