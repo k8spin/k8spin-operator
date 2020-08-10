@@ -61,6 +61,14 @@ NAME      AGE
 example   86s
 ```
 
+If you have installed the [K8Spin kubectl plugin](docs/kubectl-plugin.md):
+
+```bash
+$ kubectl k8spin get org
+Name                CPU                 Memory
+example             10                  10Gi
+```
+
 As `example` organization admin get available tenants:
 
 ```bash
