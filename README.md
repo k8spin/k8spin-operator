@@ -2,6 +2,10 @@
 
 Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kubernetes Cluster.
 
+![Logo](docs/logo.png)
+
+------
+
 ## Features
 
 The main features included in the Operator:
@@ -9,8 +13,8 @@ The main features included in the Operator:
 - **Enable Multi-Tenant:** Adds three new hierarchy concepts *(Organizations, Tenants and Spaces)*.
 - **Secure and scalable cluster management delegation:** Cluster Admins creates Organizations
 then delegating its access to users and groups.
-- **Cluster budget management:** Assignning resources in the organization definition makes possible to
-understand how many resources are allocated to a user, team or the whole company.
+- **Cluster budget management:** Assigning resources in the organization definition makes possible to
+understand how many resources are allocated to a user, team, or the whole company.
 
 ## Concepts
 
@@ -21,8 +25,8 @@ can set compute quotas for the whole Organization and grant permissions to users
 - **Tenant**: A tenant can be created by an Organization administrator hosting **spaces**. The Tenant administrator
 can fix compute quotas and assign roles to users and/or groups. Tenants resources should fit into
 Organization resources.
-- **Space**: Tenant administrator can create Spaces. An space is an abstraction layer on top of
-a Namespace. A tenant administrator should assign quotas and roles to the Space. Space resources should fit
+- **Space**: Tenant administrators can create Spaces. Space is an abstraction layer on top of
+a Namespace. A tenant administrator should assign quotas and roles to Space. Space resources should fit
 into Tenant resources.
 
 ## TL;DR
@@ -53,7 +57,7 @@ $ kubectl apply -f example-cr/space-1.yaml
 space.k8spin.cloud/dev created
 ```
 
-As cluster admin check organizations:
+As cluster-admin check organizations:
 
 ```bash
 $ kubectl get org
@@ -92,7 +96,7 @@ $ kubectl run nginx --image nginx --replicas=2 -n org-example-tenant-crm-space-d
 pod/nginx created
 ```
 
-Dicover workloads in the dev space as space viewer:
+Discover workloads in the dev space as space viewer:
 
 ```bash
 $ kubectl get pods -n org-example-tenant-crm-space-dev --as Pau
@@ -103,3 +107,11 @@ nginx   1/1     Running   0          66s
 ## Documentation
 
 Discover all the power of this operator [reading all the documentation](docs)
+
+## Contributing
+
+We would love you to contribute to `@k8spin/k8spin-operator`, pull requests are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+
+## License
+
+The scripts and documentation in this project are released under the [GNU GPLv3](LICENSE)
