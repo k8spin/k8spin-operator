@@ -62,13 +62,13 @@ def ensure_tenant_role_bindings(api, organization: k8spin_common.Organization, t
                 "k8spin.cloud/tenant": tenant_name
             }
             role_binding = create_role_binding(
-                rolebinding_name, namespace.name, labels, name, target_kind, target)
+                rolebinding_name, namespace.name, labels, name, target_kind, target, None)
             ensure(role_binding, tenant)
             rolebindings_names.append(rolebinding_name)
             # Create required binding to allow user query namespaces
             cluster_rolebinding_name = f"{tenant_name}-{name}-{target_kind.lower()}-{target.lower()}"
             cluster_role_binding = create_cluster_role_binding(
-                cluster_rolebinding_name, labels, "namespace-viewer", target_kind, target)
+                cluster_rolebinding_name, labels, "namespace-viewer", target_kind, target, None)
             ensure(cluster_role_binding, tenant)
     # Finally, cleanup
     _clean_tenant_roles(organization, tenant, rolebindings_names)
