@@ -4,7 +4,7 @@ import time
 import inspect
 
 from slugify import slugify
-from pykube import Namespace
+from pykube import Namespace, RoleBinding, ClusterRoleBinding
 import pykube
 import pytest
 
@@ -177,3 +177,43 @@ def test_manage_limits_space_modtenant(cluster):
     space.obj["spec"]["resources"]["cpu"] = "10"
     space.obj["spec"]["resources"]["memory"] = "10G"
     space.create()
+
+
+def test_org_roles(cluster):
+    test_id = "t8"
+    org = create_org_object(api=cluster.api, organization_name=test_id+ORG_NAME)
+    org.obj["spec"]["roles"] = [{
+        "name": "organization-admin",
+        "serviceAccounts": ["kube-system:default"]
+    }]
+
+    org.create()
+    time.sleep(TIMEOUT)
+    org_role_bindings = list(RoleBinding.objects(cluster.api, organization_namespacename_generator(organization_name=test_id+ORG_NAME)).filter(
+        selector={"k8spin.cloud/type": "role", "k8spin.cloud/org": test_id+ORG_NAME}))
+
+    assert len(org_role_bindings) == 1
+    assert org_role_bindings[0].obj["subjects"][0]["kind"] == "ServiceAccount"
+    assert org_role_bindings[0].obj["subjects"][0]["name"] == "default"
+    assert org_role_bindings[0].obj["subjects"][0]["namespace"] == "kube-system"
+    assert org_role_bindings[0].obj["roleRef"]["name"] == "organization-admin"
+
+
+def test_org_cluster_roles(cluster):
+    test_id = "t9"
+    org = create_org_object(api=cluster.api, organization_name=test_id+ORG_NAME)
+    org.obj["spec"]["roles"] = [{
+        "name": "organization-admin",
+        "serviceAccounts": ["kube-system:default"]
+    }]
+
+    org.create()
+    time.sleep(TIMEOUT)
+    org_clusterrole_bindings = list(ClusterRoleBinding.objects(cluster.api).filter(
+        selector={"k8spin.cloud/type": "role", "k8spin.cloud/org": test_id+ORG_NAME}))
+
+    assert len(org_clusterrole_bindings) == 1
+    assert org_clusterrole_bindings[0].obj["subjects"][0]["kind"] == "ServiceAccount"
+    assert org_clusterrole_bindings[0].obj["subjects"][0]["name"] == "default"
+    assert org_clusterrole_bindings[0].obj["subjects"][0]["namespace"] == "kube-system"
+    assert org_clusterrole_bindings[0].obj["roleRef"]["name"] == "namespace-viewer"
