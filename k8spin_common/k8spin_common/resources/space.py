@@ -5,6 +5,7 @@ from k8spin_common.helper import adopt, ensure, kubernetes_api
 from k8spin_common.resources.namespace import create_namespace
 from k8spin_common.resources.quotas import (create_limit_range,
                                             create_resource_quota)
+from k8spin_common.resources.network_policies import create_network_policy
 from k8spin_common.resources.rbac import (create_cluster_role_binding,
                                           create_role_binding)
 from k8spin_common.resources.tenant import tenant_namespacename_generator
@@ -27,7 +28,8 @@ def ensure_space_resources(organization: k8spin_common.Organization, tenant: k8s
         organization=organization, tenant=tenant, space_name=space_name)
     ensure_space_limit_range(
         organization=organization, tenant=tenant, space_name=space_name)
-
+    ensure_space_network_policies(
+        organization=organization, tenant=tenant, space_name=space_name)
 
 @kubernetes_api
 def ensure_space_namespace(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):
@@ -80,6 +82,21 @@ def ensure_space_limit_range(api, organization: k8spin_common.Organization, tena
     space_limit_range = ensure(space_limit_range, space)
     return space_limit_range
 
+@kubernetes_api
+def ensure_space_network_policies(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):
+    space = get_space(space_name, tenant.name, organization.name)
+    space_namespace = space.space_namespace
+    labels = {
+        "k8spin.cloud/type": "defaults",
+        "k8spin.cloud/org": organization.name,
+        "k8spin.cloud/tenant": tenant.name,
+        "k8spin.cloud/space": space_name
+    }
+    allow_incoming_network = space.get_allow_incoming_network
+    space_network_policy = create_network_policy(
+        "defaults", space_namespace.name, labels, allow_incoming_network)
+    space_network_policy = ensure(space_network_policy, space)
+    return space_network_policy
 
 @kubernetes_api
 def ensure_space_role_bindings(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):

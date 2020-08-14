@@ -12,6 +12,16 @@ spec:
       resources:
         cpu: 10m
         memory: 32Mi
+  allowIncomingNetwork:
+    organizations:
+      - organization_name: example
+    tenants:
+      - organization_name: example
+        tenant_name: crm
+    spaces:
+      - organization_name: example
+        tenant_name: crm
+        space_name: stg
 ---
 apiVersion: k8spin.cloud/v1
 kind: Space

@@ -68,6 +68,45 @@ spec:
                               type: string
                             memory:
                               type: string
+                allowIncomingNetwork:
+                  type: object
+                  properties:
+                    organizations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          organization_name:
+                            type: string
+                        required:
+                          - organization_name
+                    tenants:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          organization_name:
+                            type: string
+                          tenant_name:
+                            type: string
+                        required:
+                          - organization_name
+                          - tenant_name
+                    spaces:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          organization_name:
+                            type: string
+                          tenant_name:
+                            type: string
+                          space_name:
+                            type: string
+                        required:
+                          - organization_name
+                          - tenant_name
+                          - space_name
   names:
     kind: Space
     plural: spaces
