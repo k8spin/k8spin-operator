@@ -108,4 +108,3 @@ def test_check_np(cluster):
         print(result1)
 
     result2 = kubectl("exec", pod2_name, "-n", namespace2, "--", "curl", "--max-time", "5", f"http://helloworld.{namespace1}.svc")
-    print(result2)
