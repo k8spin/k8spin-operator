@@ -16,12 +16,25 @@ def create_network_policy(api, name: str, namespace: str, labels: dict, allow_in
             name: k8spin-space-network-policy
             namespace: {namespace}
         spec:
-            podSelector: {{}}
+            podSelector:
             ingress: []
             policyTypes:
             - Ingress
         """
     )
+
+    ##Connectivity from same namespace
+    _obj["spec"]["ingress"].append({
+        "from": [
+            {
+                "namespaceSelector":{
+                    "matchLabels":{
+                        "k8spin.cloud/name": namespace
+                    }
+                }
+            }
+        ]
+     })
 
     allow_organizations = allow_incoming_network.get("organizations", [])
     allow_tenants = allow_incoming_network.get("tenants", [])

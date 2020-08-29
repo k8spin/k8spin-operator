@@ -39,7 +39,8 @@ def ensure_space_namespace(api, organization: k8spin_common.Organization, tenant
         "k8spin.cloud/type": "space",
         "k8spin.cloud/org": organization.name,
         "k8spin.cloud/tenant": tenant.name,
-        "k8spin.cloud/space": space_name
+        "k8spin.cloud/space": space_name,
+        "k8spin.cloud/name": space_namespace_name
     }
     owner = get_space(space_name, tenant.name, organization.name)
     space_namespace = create_namespace(space_namespace_name, labels)
