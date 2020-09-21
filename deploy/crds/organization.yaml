@@ -35,6 +35,10 @@ spec:
                         type: array
                         items:
                           type: string
+                      serviceAccounts:
+                        type: array
+                        items:
+                          type: string
                     required:
                       - name
                 resources:
@@ -45,7 +49,7 @@ spec:
                   properties:
                     cpu:
                       type: string
-                    memory: 
+                    memory:
                       type: string
   names:
     kind: Organization

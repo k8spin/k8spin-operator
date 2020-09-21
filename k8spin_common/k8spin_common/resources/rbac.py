@@ -5,7 +5,8 @@ from k8spin_common.helper import kubernetes_api
 
 
 @kubernetes_api
-def create_role_binding(api, name: str, namespace: str, labels: dict, cluster_role: str, subject_kind: str, subject_name: str) -> pykube.RoleBinding:
+def create_role_binding(api, name: str, namespace: str, labels: dict, cluster_role: str, subject_kind: str, subject_name: str, subject_namespace: str) -> pykube.RoleBinding:
+    subject_last_part = f"namespace: {subject_namespace}" if subject_kind == "ServiceAccount" else "apiGroup: rbac.authorization.k8s.io"
     _obj = yaml.safe_load(
         f"""
         apiVersion: rbac.authorization.k8s.io/v1
@@ -20,7 +21,7 @@ def create_role_binding(api, name: str, namespace: str, labels: dict, cluster_ro
         subjects:
         - kind: {subject_kind}
           name: {subject_name}
-          apiGroup: rbac.authorization.k8s.io
+          {subject_last_part}
         """
         )
     metadata = _obj.get("metadata")
@@ -29,7 +30,8 @@ def create_role_binding(api, name: str, namespace: str, labels: dict, cluster_ro
 
 
 @kubernetes_api
-def create_cluster_role_binding(api, name: str, labels: dict, cluster_role: str, subject_kind: str, subject_name: str) -> pykube.ClusterRoleBinding:
+def create_cluster_role_binding(api, name: str, labels: dict, cluster_role: str, subject_kind: str, subject_name: str, subject_namespace: str) -> pykube.ClusterRoleBinding:
+    subject_last_part = f"namespace: {subject_namespace}" if subject_kind == "ServiceAccount" else "apiGroup: rbac.authorization.k8s.io"
     _obj = yaml.safe_load(
         f"""
         apiVersion: rbac.authorization.k8s.io/v1
@@ -43,9 +45,9 @@ def create_cluster_role_binding(api, name: str, labels: dict, cluster_role: str,
         subjects:
         - kind: {subject_kind}
           name: {subject_name}
-          apiGroup: rbac.authorization.k8s.io
+          {subject_last_part}
         """
         )
     metadata = _obj.get("metadata")
     metadata["labels"] = labels
-    return pykube.RoleBinding(api, _obj)
+    return pykube.ClusterRoleBinding(api, _obj)
