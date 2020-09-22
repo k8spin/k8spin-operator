@@ -1,0 +1,39 @@
+name: "krew-release"
+
+on:
+  push:
+    branches:
+      - krew-release
+            
+jobs:
+  krew-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Create k8spin krew package
+      run: |
+        cp kubectl-k8spin.py kubectl-k8spin
+        chmod +x kubectl-k8spin
+        tar -zcvf kubectl-k8spin.tar.gz kubectl-k8spin
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0-rc2
+        release_name: Release v1.0.0-rc2
+        body: |
+          Testing krew
+        draft: false
+        prerelease: true
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./kubectl-k8spin.tar.gz
+        asset_name: kubectl-k8spin.tar.gz
+        asset_content_type: application/tar+gzip
