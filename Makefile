@@ -28,7 +28,7 @@ build:
 
 ## deploy: Deploys the complete solution
 deploy: load
-	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f https://docs.projectcalico.org/v3.16/manifests/calico.yaml
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f ./deploy/cert-manager
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f ./deploy/crds/ -n default
