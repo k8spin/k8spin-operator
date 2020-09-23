@@ -42,25 +42,30 @@ def ensure_organization_role_bindings(api, organization_name: str):
     for role in roles:
         # Cluster role to assign
         name = role.get('name')
-        target_kind = "Group"
-        targets = role.get('groups', None)
+        target_kind = "ServiceAccount"
+        targets = role.get('serviceAccounts', None)
         if not targets:
-            target_kind = "User"
-            targets = role.get('users', list())
+            target_kind = "Group"
+            targets = role.get('groups', None)
+            if not targets:
+                target_kind = "User"
+                targets = role.get('users', list())
         for target in targets:
+            target_namespace = target.split(":")[0] if target_kind == "ServiceAccount" else None
+            target = target.split(":")[1] if target_kind == "ServiceAccount" else target
             rolebinding_name = f"{organization_name}-{name}-{target_kind.lower()}-{target.lower()}"
             labels = {
                 "k8spin.cloud/type": "role",
                 "k8spin.cloud/org": organization.name
             }
             role_binding = create_role_binding(
-                rolebinding_name, namespace.name, labels, name, target_kind, target)
+                rolebinding_name, namespace.name, labels, name, target_kind, target, target_namespace)
             ensure(role_binding, organization)
             rolebindings_names.append(rolebinding_name)
             # Create required binding to allow user query namespaces
             cluster_rolebinding_name = f"{organization_name}-{name}-{target_kind.lower()}-{target.lower()}"
             cluster_role_binding = create_cluster_role_binding(
-                cluster_rolebinding_name, labels, "namespace-viewer", target_kind, target)
+                cluster_rolebinding_name, labels, "namespace-viewer", target_kind, target, target_namespace)
             ensure(cluster_role_binding, organization)
     # Finally, cleanup
     _clean_organization_roles(organization, rolebindings_names)
