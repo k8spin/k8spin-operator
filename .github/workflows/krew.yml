@@ -20,15 +20,15 @@ jobs:
         export SHA256=$(sha256sum kubectl-k8spin.tar.gz | awk '{print $1'})
         envsubst < plugins/k8spin.tpl.yaml > plugins/k8spin.yaml
         cat plugins/k8spin.yaml
+        echo "::set-env name=RELEASE_VERSION::$VERSION"
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: v1.0.0-rc3 # TODO Run only on tags
       with:
-        tag_name: ${VERSION}
-        release_name: Release ${VERSION}
+        tag_name: ${{ env.RELEASE_VERSION }}
+        release_name: Release ${{ env.RELEASE_VERSION }}
         body: |
           Testing krew
         draft: false
@@ -43,14 +43,12 @@ jobs:
         asset_path: ./kubectl-k8spin.tar.gz
         asset_name: kubectl-k8spin.tar.gz
         asset_content_type: application/tar+gzip
-    - name: push-krew-manifest
+    - name: Push krew manifest
       uses: github-actions-x/commit@v2.7
-      env:
-        VERSION: v1.0.0-rc3 # TODO Run only on tags
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         push-branch: krew-release # TODO Change to master
-        commit-message: Add krew manifest ${VERSION}
+        commit-message: Add krew manifest ${{ env.RELEASE_VERSION }}
         force-add: true
         files: plugins/k8spin.yaml
         name: K8Spin Bot
