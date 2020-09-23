@@ -1,0 +1,27 @@
+apiVersion: krew.googlecontainertools.github.com/v1alpha2
+kind: Plugin
+metadata:
+  name: k8spin
+spec:
+  caveats: |
+    This plugin needs the following programs:
+    * python >= 3.8
+  description: |
+    This plugin manages K8Spin resources
+  homepage: https://github.com/k8spin/k8spin-operator
+  platforms:
+  - bin: kubectl-k8spin
+    files:
+    - from: ./*/kubectl-k8spin
+      to: .
+    selector:
+      matchExpressions:
+      - key: os
+        operator: In
+        values:
+        - darwin
+        - linux
+    sha256: ${SHA256}
+    uri: https://github.com/k8spin/k8spin-operator/releases/download/${VERSION}/kubectl-k8spin.tar.gz
+  shortDescription: Manage K8Spin resources
+  version: ${VERSION}

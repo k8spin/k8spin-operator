@@ -11,18 +11,24 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Create k8spin krew package
+      env:
+        VERSION: v1.0.0-rc3 # TODO Run only on tags
       run: |
         cp kubectl-k8spin.py kubectl-k8spin
         chmod +x kubectl-k8spin
         tar -zcvf kubectl-k8spin.tar.gz kubectl-k8spin
+        export SHA256=$(sha256sum kubectl-k8spin.tar.gz | awk '{print $1'})
+        envsubst < plugins/k8spin.tpl.yaml > plugins/k8spin.yaml
+        cat plugins/k8spin.yaml
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: v1.0.0-rc3 # TODO Run only on tags
       with:
-        tag_name: v1.0.0-rc2
-        release_name: Release v1.0.0-rc2
+        tag_name: ${VERSION}
+        release_name: Release ${VERSION}
         body: |
           Testing krew
         draft: false
@@ -37,3 +43,15 @@ jobs:
         asset_path: ./kubectl-k8spin.tar.gz
         asset_name: kubectl-k8spin.tar.gz
         asset_content_type: application/tar+gzip
+    - name: push-krew-manifest
+      uses: github-actions-x/commit@v2.7
+      env:
+        VERSION: v1.0.0-rc3 # TODO Run only on tags
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        push-branch: krew-release # TODO Change to master
+        commit-message: Add krew manifest ${VERSION}
+        force-add: true
+        files: plugins/k8spin.yaml
+        name: K8Spin Bot
+        email: admin@k8spin.cloud
