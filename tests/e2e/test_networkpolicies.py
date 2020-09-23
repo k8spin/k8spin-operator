@@ -74,6 +74,13 @@ def test_create_space_np(cluster):
                 "organization_name": "example",
                 "tenant_name": "crm2"
             },
+        ],
+        "spaces" : [
+            {
+                "organization_name": "example",
+                "tenant_name": "crm",
+                "space_name": "test"
+            }
         ]
     }
 
@@ -85,7 +92,7 @@ def test_create_space_np(cluster):
     assert len(networkPolicies) == 1
 
     print(networkPolicies[0])
-    assert len(networkPolicies[0].ingress) == 4
+    assert len(networkPolicies[0].ingress) == 5
 
 def test_check_np(cluster):
     test_id = "np3"
