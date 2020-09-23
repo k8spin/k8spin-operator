@@ -7,6 +7,10 @@ class NetworkPolicy(NamespacedAPIObject):
     endpoint = "networkpolicies"
     kind = "“NetworkPolicy”"
 
+    @property
+    def ingress(self) -> list:
+        return self.obj["spec"].get("ingress", list())
+
 class Organization(APIObject):
 
     version = "k8spin.cloud/v1"

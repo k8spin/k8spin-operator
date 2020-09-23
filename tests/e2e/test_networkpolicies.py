@@ -43,8 +43,52 @@ def test_create_np(cluster):
     networkPolicies = NetworkPolicy.objects(cluster.api, namespace.name).filter()
     assert len(networkPolicies) == 1
 
-def test_check_np(cluster):
+def test_create_space_np(cluster):
     test_id = "np2"
+    org = create_org_object(api=cluster.api, organization_name=test_id+ORG_NAME)
+    org.obj["spec"]["resources"]["cpu"] = "10"
+    org.obj["spec"]["resources"]["memory"] = "10G"
+    org.create()
+    time.sleep(TIMEOUT)
+
+    tenant = create_tenant_object(api=cluster.api, organization_name=test_id+ORG_NAME, tenant_name=test_id+TENANT_NAME)
+    tenant.obj["spec"]["resources"]["cpu"] = "5"
+    tenant.obj["spec"]["resources"]["memory"] = "5G"
+    tenant.create()
+    time.sleep(TIMEOUT)
+
+    space = create_space_object(api=cluster.api, organization_name=test_id+ORG_NAME, tenant_name=test_id+TENANT_NAME, space_name=test_id+SPACE_NAME)
+    space.obj["spec"]["resources"]["cpu"] = "1"
+    space.obj["spec"]["resources"]["memory"] = "1G"
+    space.obj["spec"]["allowIncomingNetwork"] ={
+        "organizations" : [
+            {
+                "organization_name": "example"
+            }
+        ],
+        "tenants" : [
+            {
+                "organization_name": "example",
+                "tenant_name": "crm"
+            },{
+                "organization_name": "example",
+                "tenant_name": "crm2"
+            },
+        ]
+    }
+
+    space.create()
+    time.sleep(TIMEOUT)
+
+    namespace = Namespace.objects(cluster.api).get(name=space_namespacename_generator(organization_name=test_id+ORG_NAME, tenant_name=test_id+TENANT_NAME, space_name=test_id+SPACE_NAME))
+    networkPolicies = list(NetworkPolicy.objects(cluster.api, namespace.name).iterator())
+    assert len(networkPolicies) == 1
+
+    print(networkPolicies[0])
+    assert len(networkPolicies[0].ingress) == 4
+
+def test_check_np(cluster):
+    test_id = "np3"
     org = create_org_object(api=cluster.api, organization_name=test_id+ORG_NAME+"1").create()
     time.sleep(TIMEOUT)
 
