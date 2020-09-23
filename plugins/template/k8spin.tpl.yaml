@@ -12,8 +12,8 @@ spec:
   platforms:
   - bin: kubectl-k8spin
     files:
-    - from: ./*/kubectl-k8spin
-      to: .
+    - from: "*"
+      to: "."
     selector:
       matchExpressions:
       - key: os

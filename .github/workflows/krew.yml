@@ -12,14 +12,13 @@ jobs:
     - uses: actions/checkout@master
     - name: Create k8spin krew package
       env:
-        VERSION: v1.0.0-rc3 # TODO Run only on tags
+        VERSION: v1.0.0-rc4 # TODO Run only on tags
       run: |
         cp kubectl-k8spin.py kubectl-k8spin
         chmod +x kubectl-k8spin
         tar -zcvf kubectl-k8spin.tar.gz kubectl-k8spin
         export SHA256=$(sha256sum kubectl-k8spin.tar.gz | awk '{print $1'})
-        envsubst < plugins/k8spin.tpl.yaml > plugins/k8spin.yaml
-        cat plugins/k8spin.yaml
+        envsubst < plugins/template/k8spin.tpl.yaml > plugins/k8spin.yaml
         echo "::set-env name=RELEASE_VERSION::$VERSION"
     - name: Create Release
       id: create_release
