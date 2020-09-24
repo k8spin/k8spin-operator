@@ -71,12 +71,14 @@ def test_create_spaces(cluster):
     space.create()
     time.sleep(TIMEOUT)
 
-    namespace = Namespace.objects(cluster.api).get(name=space_namespacename_generator(
-        organization_name=test_id+ORG_NAME, tenant_name=test_id+TENANT_NAME, space_name=test_id+SPACE_NAME))
+    namespace_name = space_namespacename_generator(organization_name=test_id+ORG_NAME, tenant_name=test_id+TENANT_NAME, space_name=test_id+SPACE_NAME)
+    namespace = Namespace.objects(cluster.api).get(name=namespace_name)
+
     assert namespace.labels["k8spin.cloud/type"] == "space"
     assert namespace.labels["k8spin.cloud/org"] == test_id+ORG_NAME
     assert namespace.labels["k8spin.cloud/tenant"] == test_id+TENANT_NAME
     assert namespace.labels["k8spin.cloud/space"] == test_id+SPACE_NAME
+    assert namespace.labels["k8spin.cloud/name"] == namespace_name
 
     resourceQuotas = pykube.ResourceQuota.objects(cluster.api, namespace.name).filter(selector={
         "k8spin.cloud/type": "quotas"

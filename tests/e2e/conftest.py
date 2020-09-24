@@ -21,6 +21,8 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     kind_cluster.load_docker_image(webhook_image)
 
     logging.info("Deploying CertManager")
+    kubectl("delete", "daemonset", "-n" "kube-system", "kindnet")
+    kubectl("apply", "-f", "https://docs.projectcalico.org/v3.16/manifests/calico.yaml")
     kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deploy/cert-manager"))
     kubectl("rollout", "status", "-n", "cert-manager", "deployment/cert-manager")
     kubectl("rollout", "status", "-n", "cert-manager", "deployment/cert-manager-cainjector")

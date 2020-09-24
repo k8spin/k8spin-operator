@@ -1,6 +1,16 @@
 from pykube.objects import APIObject, Namespace, NamespacedAPIObject
 
 
+class NetworkPolicy(NamespacedAPIObject):
+
+    version = "networking.k8s.io/v1"
+    endpoint = "networkpolicies"
+    kind = "“NetworkPolicy”"
+
+    @property
+    def ingress(self) -> list:
+        return self.obj["spec"].get("ingress", list())
+
 class Organization(APIObject):
 
     version = "k8spin.cloud/v1"
@@ -95,3 +105,7 @@ class Space(NamespacedAPIObject):
     @property
     def default_container_resources(self) -> list:
         return self.obj["spec"]["containers"]["defaults"]["resources"]
+
+    @property
+    def get_allow_incoming_network(self) -> list:
+        return self.obj["spec"].get("allowIncomingNetwork", {})

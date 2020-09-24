@@ -15,7 +15,7 @@ help: Makefile
 
 ## cluster-up: Creates the kind cluster
 cluster-up:
-	@kind create cluster --name $(KIND_CLUSTER_NAME) --image kindest/node:v${CLUSTER_VERSION} && echo "Cluster created" || echo "Cluster already exists"
+	@kind create cluster --name $(KIND_CLUSTER_NAME) --image kindest/node:v${CLUSTER_VERSION} --config kind-calico.yaml && echo "Cluster created" || echo "Cluster already exists"
 
 ## cluster-down: Teardown the kind cluster
 cluster-down:
@@ -28,6 +28,7 @@ build:
 
 ## deploy: Deploys the complete solution
 deploy: load
+	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f https://docs.projectcalico.org/v3.16/manifests/calico.yaml
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f ./deploy/cert-manager
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f ./deploy/crds/ -n default
