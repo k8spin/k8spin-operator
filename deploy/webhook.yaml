@@ -83,7 +83,7 @@ subjects:
     name: k8spin-webhook
     namespace: default
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: k8spin-webhook-cert
@@ -97,7 +97,7 @@ spec:
     name: k8spin-webhook-issuer
   secretName: k8spin-webhook
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: k8spin-webhook-issuer
