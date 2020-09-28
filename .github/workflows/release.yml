@@ -32,9 +32,9 @@ jobs:
         path: e2elogs
     - name: Publish image
       run: |
-        docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-        make TAG_VERSION=${GITHUB_REF##*/} publish_dockerhub
-        make TAG_VERSION=latest publish_dockerhub
+        docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+        make TAG_VERSION=${GITHUB_REF##*/} publish_container_image
+        make TAG_VERSION=latest publish_container_image
     - name: Create k8spin krew package
       run: |
         cp kubectl-k8spin.py kubectl-k8spin

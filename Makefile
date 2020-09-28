@@ -3,6 +3,7 @@ CLUSTER_VERSION="1.18.2"
 KIND_CLUSTER_NAME="k8spin-operator"
 PYTEST_PARAMS=""
 TAG_VERSION="dev"
+REGISTRY="ghcr.io"
 
 .PHONY: help
 all: help
@@ -64,11 +65,11 @@ load: cluster-up build
 kubie:
 	@kubie ctx kind-$(KIND_CLUSTER_NAME)
 
-publish_dockerhub:
-	@docker tag k8spin/k8spin-operator:dev k8spin/k8spin-operator:$(TAG_VERSION)
-	@docker tag k8spin/k8spin-webhook:dev k8spin/k8spin-webhook:$(TAG_VERSION)
-	@docker push k8spin/k8spin-operator:$(TAG_VERSION)
-	@docker push k8spin/k8spin-webhook:$(TAG_VERSION)
+publish_container_image:
+	@docker tag k8spin/k8spin-operator:dev $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
+	@docker tag k8spin/k8spin-webhook:dev $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
+	@docker push $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
+	@docker push $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
 
 clean:
 	@rm -rf .kube .pytest_cache .pytest-kind .venv-test e2elogs
