@@ -1,12 +1,10 @@
-name: "CI"
+name: "Master"
 
 on:
   push:
     branches:
       - master
-    tags:
-      - v*
-            
+
 jobs:
   e2e_and_publish:
     runs-on: ubuntu-latest
@@ -14,8 +12,8 @@ jobs:
     - uses: actions/checkout@master
     - uses: engineerd/setup-kind@v0.3.0
       with:
-          version: "v0.7.0"
-          skipClusterCreation: "true"
+        version: "v0.7.0"
+        skipClusterCreation: "true"
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
@@ -35,6 +33,5 @@ jobs:
     - name: Publish image
       run: |
         docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-        make TAG_VERSION=${GITHUB_REF##*/} publish_dockerhub
         make TAG_VERSION=dev publish_dockerhub
         make TAG_VERSION=latest publish_dockerhub
