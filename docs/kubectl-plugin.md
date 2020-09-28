@@ -5,6 +5,55 @@ This plugin makes straight forward to use and manage K8Spin concepts with the
 
 ## Install
 
+### Krew
+
+> [Krew](https://github.com/kubernetes-sigs/krew) is the package manager for kubectl plugins.
+>
+> Visit the [Krew documentation](https://krew.sigs.k8s.io/docs/user-guide/quickstart/) to find Installation
+> instructions, User Guide and Developer` Guide.
+
+```bash
+$ kubectl krew index add k8spin https://github.com/k8spin/k8spin-operator.git
+WARNING: You have added a new index from "https://github.com/k8spin/k8spin-operator.git"
+The plugins in this index are not audited for security by the Krew maintainers.
+Install them at your own risk.
+$ kubectl krew search k8spin
+NAME           DESCRIPTION              INSTALLED
+k8spin/k8spin  Manage K8Spin resources  no
+$ kubectl krew install k8spin/k8spin
+Updated the local copy of plugin index.
+Updated the local copy of plugin index "k8spin".
+Installing plugin: k8spin
+Installed plugin: k8spin
+\
+ | Use this plugin:
+ |      kubectl k8spin
+ | Documentation:
+ |      https://github.com/k8spin/k8spin-operator
+ | Caveats:
+ | \
+ |  | This plugin needs the following programs:
+ |  | * python >= 3.8
+ | /
+/
+$ kubectl k8spin
+usage: kubectl k8spin [-h] [--debug] {get,create,delete} ...
+
+K8Spin kubectl plugin to manage multi-tenancy concepts
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --debug              Activate debug mode
+
+commands:
+  {get,create,delete}
+    get                Get K8Spin resources
+    create             Create K8Spin resources
+    delete             Delete K8Spin resources
+```
+
+### Manually
+
 Place [kubectl-k8spin.py](../kubectl-k8spin.py) file in your path **without extension**.
 
 ```bash
@@ -20,7 +69,7 @@ $ sudo make kubectl_plugin
 
 ### Requirements
 
-The plugin requires python 3.6+ to be previously installed.
+The plugin requires python 3.8+ to be previously installed.
 
 ### Check
 
