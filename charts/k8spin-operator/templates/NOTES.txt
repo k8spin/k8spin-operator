@@ -1,0 +1,9 @@
+Thank you for installing k8spin-operator: Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kubernetes Cluster.
+
+Your release is named {{ .Release.Name }}.
+
+To get started with k8spin-operator, we recommend reading:
+https://github.com/k8spin/k8spin-operator
+
+For more information on running k8spin-operator, visit:
+https://k8spin.cloud/

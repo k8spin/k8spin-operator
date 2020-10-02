@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k8spin-webhook-cert
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  dnsNames:
+  - k8spin-webhook.{{ .Release.Namespace }}.svc
+  - k8spin-webhook.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: k8spin-webhook-issuer
+  secretName: k8spin-webhook
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: k8spin-webhook-issuer
+  namespace: {{ .Release.Namespace }}
+spec:
+  selfSigned: {}

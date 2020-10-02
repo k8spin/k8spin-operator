@@ -1,0 +1,314 @@
+{{- if .Values.rbac.create }}
+# K8Spin Included roles
+## Namespaces
+### namespace-viewer: Can query all namespaces
+## Organizations
+### organization-viewer: Can query tenants in a specific organization
+### organization-admin: Can query and manage tenants in a specific organization
+## Tenants
+### tenant-viewer: Can query spaces in a specific tenant
+### tenant-admin: Can query and manage spaces in a specific tenant
+## Spaces
+### space-viewer: Can readonly everything in a space
+### space-admin: Can everything inside a space
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: namespace-viewer
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: [""]
+  resources:
+    - namespaces
+  verbs:
+    - get
+    - list
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: organization-viewer
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: ["k8spin.cloud"]
+  resources:
+    - tenants
+  verbs:
+    - get
+    - list
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: organization-admin
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: ["k8spin.cloud"]
+  resources:
+    - tenants
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tenant-viewer
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: ["k8spin.cloud"]
+  resources:
+    - spaces
+  verbs:
+    - get
+    - list
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tenant-admin
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: ["k8spin.cloud"]
+  resources:
+    - spaces
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: space-viewer
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: [""]
+  resources:
+    - bindings
+    - configmaps
+    - endpoints
+    - events
+    - limitranges
+    - persistentvolumeclaims
+    - pods
+    - podtemplates
+    - replicationcontrollers
+    - resourcequotas
+    - secrets
+    - serviceaccounts
+    - services
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["acme.cert-manager.io"]
+  resources:
+    - challenges
+    - orders
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["apps"]
+  resources:
+    - controllerrevisions
+    - daemonsets
+    - deployments
+    - replicasets
+    - statefulsets
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["authorization.k8s.io"]
+  resources:
+    - localsubjectaccessreviews
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["autoscaling"]
+  resources:
+    - horizontalpodautoscalers
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["batch"]
+  resources:
+    - cronjobs
+    - jobs
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["cert-manager.io"]
+  resources:
+    - certificaterequests
+    - certificates
+    - issuers
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["coordination.k8s.io"]
+  resources:
+    - leases
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["discovery.k8s.io"]
+  resources:
+    - endpointslices
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["events.k8s.io"]
+  resources:
+    - events
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources:
+    - ingresses
+    - networkpolicies
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["policy"]
+  resources:
+    - poddisruptionbudgets
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources:
+    - rolebindings
+    - roles
+  verbs:
+    - get
+    - list
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: space-admin
+  labels:
+    application: k8spin-operator
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+- apiGroups: [""]
+  resources:
+    - bindings
+    - configmaps
+    - endpoints
+    - events
+    - limitranges
+    - persistentvolumeclaims
+    - pods
+    - podtemplates
+    - replicationcontrollers
+    - resourcequotas
+    - secrets
+    - serviceaccounts
+    - services
+  verbs: ["*"]
+- apiGroups: ["acme.cert-manager.io"]
+  resources:
+    - challenges
+    - orders
+  verbs: ["*"]
+- apiGroups: ["apps"]
+  resources:
+    - controllerrevisions
+    - daemonsets
+    - deployments
+    - replicasets
+    - statefulsets
+  verbs: ["*"]
+- apiGroups: ["authorization.k8s.io"]
+  resources:
+    - localsubjectaccessreviews
+  verbs: ["*"]
+- apiGroups: ["autoscaling"]
+  resources:
+    - horizontalpodautoscalers
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources:
+    - cronjobs
+    - jobs
+  verbs: ["*"]
+- apiGroups: ["cert-manager.io"]
+  resources:
+    - certificaterequests
+    - certificates
+    - issuers
+  verbs: ["*"]
+- apiGroups: ["coordination.k8s.io"]
+  resources:
+    - leases
+  verbs: ["*"]
+- apiGroups: ["discovery.k8s.io"]
+  resources:
+    - endpointslices
+  verbs: ["*"]
+- apiGroups: ["events.k8s.io"]
+  resources:
+    - events
+  verbs: ["*"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources:
+    - ingresses
+    - networkpolicies
+  verbs: ["*"]
+- apiGroups: ["policy"]
+  resources:
+    - poddisruptionbudgets
+  verbs: ["*"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources:
+    - rolebindings
+    - roles
+  verbs: ["*"]
+{{- end }}

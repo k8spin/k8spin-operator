@@ -29,6 +29,23 @@ into Tenant resources.
 
 Clone this repo, cd into it and:
 
+### Install with Helm 3
+
+```bash
+# Create a local cluster
+$ kind create cluster
+# Deploy cert-manager
+$ helm repo add jetstack https://charts.jetstack.io
+$ helm repo update
+$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.0.2 --set installCRDs=true
+$ kubectl wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
+# Deploy K8Spin operator
+$ helm install k8spin-operator .\k8spin-operator\ --namespace default
+$ kubectl wait --for=condition=Available deployment --timeout=2m -n default --all
+```
+
+### Install with kubectl
+
 ```bash
 # Create a local cluster
 $ kind create cluster

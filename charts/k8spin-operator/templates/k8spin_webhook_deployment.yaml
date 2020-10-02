@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8spin-webhook
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: k8spin-webhook
+  template:
+    metadata:
+      labels:
+        application: k8spin-webhook
+        app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ (include "k8spin_webhook.serviceAccountName" .) }}
+      containers:
+      - name: k8spin-webhook
+        image: "{{ .Values.k8spin_webhook.image.name }}:{{ .Values.k8spin_webhook.image.tag }}"
+        imagePullPolicy: {{ .Values.k8spin_webhook.image.pullPolicy }}
+        ports:
+        - containerPort: 443
+        env:
+        - name: LOGGING_LEVEL
+          value: "{{ .Values.k8spin_webhook.logging_level }}"
+        volumeMounts:
+        - name: tls
+          mountPath: "/certs"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 443
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 1
+          successThreshold: 2
+          failureThreshold: 1
+        livenessProbe:
+          tcpSocket:
+            port: 443
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 1
+      volumes:
+      - name: tls
+        secret:
+          secretName: k8spin-webhook
