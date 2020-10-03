@@ -1,3 +1,5 @@
+SHELL:=/bin/bash
+
 PROJECTNAME=$(shell basename "$(PWD)")
 CLUSTER_VERSION="1.18.8"
 KIND_CLUSTER_NAME="k8spin-operator"

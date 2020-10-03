@@ -1,3 +1,5 @@
+SHELL:=/bin/bash
+
 PROJECTNAME=$(shell basename "$(PWD)")
 
 .PHONY: help install lint
