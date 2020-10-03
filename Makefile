@@ -80,3 +80,9 @@ clean:
 kubectl_plugin:
 	@cp kubectl-k8spin.py /usr/local/bin/kubectl-k8spin
 	@chmod +x /usr/local/bin/kubectl-k8spin
+
+## lint: Lint the three main python projects
+lint:
+	make -C k8spin_common lint
+	make -C k8spin_operator lint
+	make -C k8spin_webhook lint
