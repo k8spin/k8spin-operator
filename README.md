@@ -1,6 +1,10 @@
 # K8Spin Operator
 
+![Build Status](https://action-badges.now.sh/k8spin/k8spin-operator)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/k8spin.svg?style=social&label=Follow%20%40k8spin)](https://twitter.com/k8spin)
+[![Join the chat at https://slack.kubernetes.io](https://img.shields.io/badge/style-register-green.svg?style=social&label=Slack)](https://slack.kubernetes.io)
 
 Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kubernetes Cluster.
 
@@ -113,6 +117,10 @@ Discover all the power of this operator [reading all the documentation](docs)
 ## Contributing
 
 We would love you to contribute to `@k8spin/k8spin-operator`, pull requests are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+
+## Using k8spin at work or in production?
+
+See [ADOPTERS.md](ADOPTERS.md) for what companies are doing with k8spin today.
 
 ## License
 
