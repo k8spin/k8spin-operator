@@ -1,5 +1,7 @@
 # K8Spin Operator
 
+[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/k8spin.svg?style=social&label=Follow%20%40k8spin)](https://twitter.com/k8spin)
+
 Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kubernetes Cluster.
 
 ![Logo](docs/logo.png)
