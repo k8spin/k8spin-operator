@@ -11,6 +11,7 @@ class NetworkPolicy(NamespacedAPIObject):
     def ingress(self) -> list:
         return self.obj["spec"].get("ingress", list())
 
+
 class Organization(APIObject):
 
     version = "k8spin.cloud/v1"
@@ -27,8 +28,8 @@ class Organization(APIObject):
 
     @property
     def tenants(self) -> list:
-        ns = self.organization_namespace
-        return Tenant.objects(self.api, ns.name).all()
+        namespace = self.organization_namespace
+        return Tenant.objects(self.api, namespace.name).all()
 
 
 class Tenant(NamespacedAPIObject):
@@ -49,7 +50,8 @@ class Tenant(NamespacedAPIObject):
         namespaces = Namespace.objects(self.api).filter(
             selector={"k8spin.cloud/org": self.org.name, "k8spin.cloud/type": "tenant"})
         for namespace in namespaces:
-            if any([owner.get("name") == self.name for owner in namespace.metadata.get("ownerReferences", list())]):
+            if any([owner.get("name") == self.name
+                    for owner in namespace.metadata.get("ownerReferences", list())]):
                 return namespace
         # TODO CHANGE WITH K8SPIN EXCEPTIONS
         raise Exception("Tenant namespace not found")
@@ -60,8 +62,9 @@ class Tenant(NamespacedAPIObject):
 
     @property
     def spaces(self) -> list:
-        ns = self.tenant_namespace
-        return Space.objects(self.api, ns.name).all()
+        namespace = self.tenant_namespace
+        return Space.objects(self.api, namespace.name).all()
+
 
 class Space(NamespacedAPIObject):
 
@@ -87,9 +90,12 @@ class Space(NamespacedAPIObject):
     @property
     def space_namespace(self) -> Namespace:
         namespaces = Namespace.objects(self.api).filter(
-            selector={"k8spin.cloud/org": self.org.name, "k8spin.cloud/tenant": self.tenant.name, "k8spin.cloud/type": "space"})
+            selector={"k8spin.cloud/org": self.org.name,
+                      "k8spin.cloud/tenant": self.tenant.name,
+                      "k8spin.cloud/type": "space"})
         for namespace in namespaces:
-            if any([owner.get("name") == self.name for owner in namespace.metadata.get("ownerReferences", list())]):
+            if any([owner.get("name") == self.name
+                    for owner in namespace.metadata.get("ownerReferences", list())]):
                 return namespace
         # TODO CHANGE WITH K8SPIN EXCEPTIONS
         raise Exception("Space namespace not found")
