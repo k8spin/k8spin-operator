@@ -1,0 +1,25 @@
+name: "Linter"
+
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade virtualenv
+    - name: Execute K8Spin Common Linter
+      run: |
+        make -C k8spin_common/ lint
+    - name: Execute K8Spin Operator Linter
+      run: |
+        make -C k8spin_operator/ lint
+    - name: Execute K8Spin Webhook Linter
+      run: |
+        make -C k8spin_webhook/ lint
