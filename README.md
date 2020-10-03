@@ -8,7 +8,7 @@
 
 Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kubernetes Cluster.
 
-![Logo](docs/logo.png)
+[![Logo](docs/logo.png)](https://k8spin.cloud)
 
 ------
 
