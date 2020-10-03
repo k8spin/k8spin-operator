@@ -77,6 +77,7 @@ publish_container_image:
 clean:
 	@rm -rf .kube .pytest_cache .pytest-kind .venv-test e2elogs
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+	@find . -type d -name '*.egg-info' -exec rm -rv {} +
 
 ## kubectl_plugin: installs the plugin in /usr/local/bin/kubectl-k8spin. Requires root privileges
 kubectl_plugin:
