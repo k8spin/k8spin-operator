@@ -16,10 +16,10 @@ Kubernetes multi-tenant operator. Enables multi-tenant capabilities in your Kube
 
 The main features included in the Operator:
 
-- **Enable Multi-Tenant:** Adds three new hierarchy concepts *(Organizations, Tenants and Spaces)*.
+- **Enable Multi-Tenant:** Adds three new hierarchy concepts *(Organizations, Tenants, and Spaces)*.
 - **Secure and scalable cluster management delegation:** Cluster Admins creates Organizations
 then delegating its access to users and groups.
-- **Cluster budget management:** Assigning resources in the organization definition makes possible to
+- **Cluster budget management:** Assigning resources in the organization definition makes it possible to
 understand how many resources are allocated to a user, team, or the whole company.
 
 ## Concepts
@@ -43,23 +43,23 @@ Clone this repo, cd into it and:
 # Create a local cluster
 $ kind create cluster
 # Deploy cert-manager
-$ kubectl apply -f deploy/cert-manager/cert-manager.yaml
+$ kubectl apply -f deployments/kubernetes/cert-manager/cert-manager.yaml
 $ kubectl wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
 # Deploy K8Spin operator
-$ kubectl apply -f ./deploy/crds/ -n default
-$ kubectl apply -f ./deploy/roles/ -n default
-$ kubectl apply -f ./deploy/ -n default
+$ kubectl apply -f ./deployments/kubernetes/crds/ -n default
+$ kubectl apply -f ./deployments/kubernetes/roles/ -n default
+$ kubectl apply -f ./deployments/kubernetes/ -n default
 $ kubectl wait --for=condition=Available deployment --timeout=2m -n default --all
 ```
 
 Now you are ready to use the operator
 
 ```bash
-$ kubectl apply -f example-cr/org-1.yaml
+$ kubectl apply -f examples/org-1.yaml
 organization.k8spin.cloud/example created
-$ kubectl apply -f example-cr/tenant-1.yaml
+$ kubectl apply -f examples/tenant-1.yaml
 tenant.k8spin.cloud/crm created
-$ kubectl apply -f example-cr/space-1.yaml
+$ kubectl apply -f examples/space-1.yaml
 space.k8spin.cloud/dev created
 ```
 
