@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for this project
 title: ''
 labels: help wanted, question
-assignees: paurosello
+assignees: paurosello, angelbarrera92
 
 ---
 
