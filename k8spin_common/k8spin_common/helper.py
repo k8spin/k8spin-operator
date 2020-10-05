@@ -1,7 +1,7 @@
 import os
 
 import pykube
-from pykube.objects import APIObject, NamespacedAPIObject
+from pykube.objects import APIObject
 
 
 def kubernetes_api(function):
@@ -16,14 +16,15 @@ def kubernetes_api(function):
 def adopt(owner: APIObject, children: APIObject) -> APIObject:
     if not children.metadata.get("ownerReferences", None):
         children.metadata["ownerReferences"] = list()
-    ownerReference = {
+    owner_reference = {
         "apiVersion": owner.version,
         "kind": owner.__class__.__name__,
         "name": owner.name,
         "uid": owner.metadata["uid"]
     }
-    if not any(child_owner.get("uid") == owner.metadata["uid"] for child_owner in children.metadata["ownerReferences"]):
-        children.metadata["ownerReferences"].append(ownerReference)
+    if not any(child_owner.get("uid") == owner.metadata["uid"]
+               for child_owner in children.metadata["ownerReferences"]):
+        children.metadata["ownerReferences"].append(owner_reference)
     return children
 
 

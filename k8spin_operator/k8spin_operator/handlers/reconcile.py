@@ -1,14 +1,13 @@
 from os import getenv
 
 import kopf
-
 from k8spin_common.resources import organization, space, tenant
 
 RECONCILIATION_INTERVAL = int(getenv("RECONCILIATION_INTERVAL_SECONDS", "10"))
 
 
 @kopf.on.delete("k8spin.cloud", "v1", "organizations")
-def delete(name, **kwargs):
+def delete():
     # Needed to fix a problem in the bellow reconciler.
     # Seems like reconciler does not remove the object from its cache if its not
     # explicitly declared this deletion handler.
@@ -16,8 +15,9 @@ def delete(name, **kwargs):
 
 
 @kopf.timer("k8spin.cloud", "v1", "organizations", interval=RECONCILIATION_INTERVAL, idle=10)
-def reconciler(name, **kwargs):
+def reconciler(name, **kwargs):  # pylint: disable=W0613
     organization.ensure_organization_resources(organization_name=name)
+    # pylint: disable=E1120
     org = organization.get_organization(name)
     org_tenants = org.tenants
     for org_tenant in org_tenants:

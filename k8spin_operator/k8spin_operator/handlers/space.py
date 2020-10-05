@@ -6,17 +6,19 @@ from k8spin_common.resources import space, tenant
 
 
 @kubernetes_api
-def lives_in_tenant_namespace(api, meta, namespace, **_):
+def lives_in_tenant_namespace(api, namespace, **_):
     parent_namespace = pykube.Namespace.objects(api).get(name=namespace)
     if parent_namespace.labels.get("k8spin.cloud/type", "") == "tenant" and any(
-            [owner.get('kind') == 'Tenant' for owner in parent_namespace.metadata.get('ownerReferences', list())]):
+            [owner.get('kind') == 'Tenant'
+             for owner in parent_namespace.metadata.get('ownerReferences', list())]):
         return True
     return False
 
 
 @kopf.on.create("k8spin.cloud", "v1", "spaces", when=lives_in_tenant_namespace)
 @kopf.on.update("k8spin.cloud", "v1", "spaces", when=lives_in_tenant_namespace)
-def create_space(name, namespace, **kwargs):
+def create_space(name, namespace, **kwargs):  # pylint: disable=W0613
+    # pylint: disable=E1120
     parent_tenant = tenant.get_tenant_from_namespace(
         tenant_namespace_name=namespace)
     parent_organization = parent_tenant.org

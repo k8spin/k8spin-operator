@@ -23,16 +23,16 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     logging.info("Deploying CertManager")
     kubectl("delete", "daemonset", "-n" "kube-system", "kindnet")
     kubectl("apply", "-f", "https://docs.projectcalico.org/v3.16/manifests/calico.yaml")
-    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deploy/cert-manager"))
+    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes/cert-manager"))
     kubectl("rollout", "status", "-n", "cert-manager", "deployment/cert-manager")
     kubectl("rollout", "status", "-n", "cert-manager", "deployment/cert-manager-cainjector")
     kubectl("wait", "--for=condition=Available", "deployment", "--timeout=2m", "-n", "cert-manager" ,"--all")
 
     logging.info("Deploying K8Spin CRDS")
-    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deploy/crds"))
+    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes/crds"))
 
     logging.info("Deploying Operator and Validator")
-    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deploy"))
+    kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes"))
 
     logging.info("Waiting for rollout ...")
     kubectl("rollout", "status", "deployment/k8spin-webhook")
@@ -47,12 +47,12 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     os.makedirs("./e2elogs", exist_ok=True)
 
     webhook_logs = open("e2elogs/webhook-logs.txt", "w")
-    webhook_logs_out = kubectl("logs", "deploy/k8spin-webhook")
+    webhook_logs_out = kubectl("logs", "deployments/k8spin-webhook")
     webhook_logs.write(webhook_logs_out)
     webhook_logs.close()
 
     operator_logs = open("e2elogs/operator-logs.txt", "w")
-    operator_logs_out = kubectl("logs", "deploy/k8spin-operator")
+    operator_logs_out = kubectl("logs", "deployments/k8spin-operator")
     operator_logs.write(operator_logs_out)
     operator_logs.close()
 

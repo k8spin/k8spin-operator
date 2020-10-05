@@ -4,8 +4,8 @@ from os import getenv
 from flask import Flask
 from healthcheck import HealthCheck
 
-import mutator
-import validator
+import mutator  # pylint: disable=E0401
+import validator  # pylint: disable=E0401
 
 logger = logging.getLogger()
 logger.setLevel(getenv("LOGGING_LEVEL", "INFO"))

@@ -1,11 +1,14 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 
-from .validator_utils import check_space_quotas, check_tenant_quotas
+from .validator_utils import (check_space_quotas,  # pylint: disable=E0401
+                              check_tenant_quotas)
 
 blueprint = Blueprint("validator", __name__, url_prefix="/validator")
 
-def validator_response(allowed, message): 
+
+def validator_response(allowed, message):
     return jsonify({"response": {"allowed": allowed, "status": {"message": message}}})
+
 
 @blueprint.route('/tenants', methods=['POST'])
 def tenant_validator():
@@ -13,6 +16,7 @@ def tenant_validator():
     resource_object = request_info["request"]["object"]
     response, message = check_tenant_quotas(resource_object)
     return validator_response(response, message)
+
 
 @blueprint.route('/spaces', methods=['POST'])
 def space_validator():
