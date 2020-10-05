@@ -1,12 +1,3 @@
----
-name: Pull Request
-about: Create a pull request to help us improve
-title: ''
-labels: ''
-assignees: paurosello, angelbarrera92
-
----
-
 ### Please check if the PR fulfills these requirements
 - [ ] The commit message follows our guidelines
 - [ ] Tests for the changes have been added (for bug fixes / features)
