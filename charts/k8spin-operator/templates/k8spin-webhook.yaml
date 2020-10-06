@@ -1,0 +1,112 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/k8spin-webhook-cert
+  name: validating-k8spin
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+webhooks:
+  - name: validating.tenants.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /validator/tenants
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "tenants"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: validating.spaces.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /validator/spaces
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "spaces"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/k8spin-webhook-cert
+  name: mutating-k8spin
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+webhooks:
+  - name: mutating.organizations.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /mutator/organizations
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "organizations"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: mutating.tenants.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /mutator/tenants
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "tenants"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
+  - name: mutating.spaces.k8spin.cloud
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /mutator/spaces
+      caBundle: Cg==
+    rules:
+      - apiGroups: ["k8spin.cloud"]
+        resources:
+          - "spaces"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
