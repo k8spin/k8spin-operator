@@ -1,5 +1,6 @@
 cert-manager:
-  enable: false
+  enable: true
+  installCRDs: true
 
 k8spin_operator:
   image: 
