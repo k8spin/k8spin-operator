@@ -35,6 +35,15 @@ jobs:
         docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
         make TAG_VERSION=${GITHUB_REF##*/} publish_container_image
         make TAG_VERSION=latest publish_container_image
+    - name: Publish Helm Chart
+      env:
+        HELM_EXPERIMENTAL_OCI: "1"
+      run: |
+        wget https://get.helm.sh/helm-v3.3.4-linux-amd64.tar.gz
+        tar -zxvf helm-v3.3.4-linux-amd64.tar.gz
+        linux-amd64/helm registry login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}" ghcr.io
+        linux-amd64/helm chart save deployments/helm/k8spin-operator ghcr.io/k8spin/k8spin-operator-chart:${GITHUB_REF##*/}
+        linux-amd64/helm chart push ghcr.io/k8spin/k8spin-operator-chart:${GITHUB_REF##*/}
     - name: Create k8spin krew package
       run: |
         cp kubectl-k8spin.py kubectl-k8spin
