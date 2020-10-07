@@ -1,3 +1,6 @@
+cert-manager:
+  enable: false
+
 k8spin_operator:
   image: 
     name: k8spin/k8spin-operator # k8spin-operator image name 

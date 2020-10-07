@@ -3,3 +3,8 @@ appVersion: "1.0.0"
 description: A Helm chart for k8spin-operator
 name: k8spin-operator
 version: 1.0.0
+dependencies:
+  - name: cert-manager
+    version: v1.0.2
+    repository: https://charts.jetstack.io
+    condition: cert-manager.enable
