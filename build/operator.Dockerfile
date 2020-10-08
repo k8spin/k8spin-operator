@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9
 
 COPY k8spin_operator/requirements.txt /src/requirements.txt
 RUN pip install -r /src/requirements.txt
