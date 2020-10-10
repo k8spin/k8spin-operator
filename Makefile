@@ -26,8 +26,8 @@ cluster-down:
 
 ## build: Local build the operator
 build:
-	@docker build -t k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
-	@docker build -t k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
+	@docker build -t k8spin/k8spin-operator:dev -t k8spin/k8spin-operator:latest -t k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
+	@docker build -t k8spin/k8spin-webhook:dev -t k8spin/k8spin-webhook:latest -t k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
 
 ## deploy: Deploys the complete solution
 deploy: load
