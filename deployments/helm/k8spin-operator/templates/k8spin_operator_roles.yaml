@@ -17,7 +17,6 @@ kind: ClusterRole
 metadata:
   name: namespace-viewer
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -36,7 +35,6 @@ kind: ClusterRole
 metadata:
   name: organization-viewer
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -55,7 +53,6 @@ kind: ClusterRole
 metadata:
   name: organization-admin
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -71,7 +68,6 @@ kind: ClusterRole
 metadata:
   name: tenant-viewer
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -90,7 +86,6 @@ kind: ClusterRole
 metadata:
   name: tenant-admin
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -106,7 +101,6 @@ kind: ClusterRole
 metadata:
   name: space-viewer
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -231,7 +225,6 @@ kind: ClusterRole
 metadata:
   name: space-admin
   labels:
-    application: k8spin-operator
     app.kubernetes.io/name: {{ template "k8spin-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}

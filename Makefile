@@ -7,7 +7,7 @@ PYTEST_PARAMS=""
 TAG_VERSION="dev"
 REGISTRY="ghcr.io"
 
-.PHONY: help cluster-up cluster-down build deploy update test-e2e test-kubeconfig load kubie publish_container_image clean
+.PHONY: help cluster-up cluster-down build deploy update test-e2e test-kubeconfig load kubie publish_container_image helm_chart_docs check_helm_chart_docs clean
 all: help
 help: Makefile
 	@echo
@@ -75,7 +75,7 @@ publish_container_image:
 
 ## clean: Remove cached files
 clean:
-	@rm -rf .kube .pytest_cache .pytest-kind .venv-test e2elogs
+	@rm -rf .kube .pytest_cache .pytest-kind .venv-test .venv-chart-docs e2elogs
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 	@find . -type d -name '*.egg-info' -exec rm -rv {} +
 
@@ -89,3 +89,14 @@ lint:
 	make -C k8spin_common lint
 	make -C k8spin_operator lint
 	make -C k8spin_webhook lint
+
+## helm_chart_docs: Creates the Helm Chart Docs
+helm_chart_docs:
+	@virtualenv -p python3.8 .venv-chart-docs
+	source .venv-chart-docs/bin/activate; \
+	pip install frigate; \
+	frigate gen deployments/helm/k8spin-operator > deployments/helm/k8spin-operator/README.md;
+
+## check_helm_chart_docs: Check if the Helm Chart documentation is in dirty state.
+check_helm_chart_docs:
+	@git diff --no-ext-diff --quiet deployments/helm/k8spin-operator/README.md || (echo "Please update the Helm Chart documentation before continue" && exit 1)
