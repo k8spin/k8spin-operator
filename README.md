@@ -41,6 +41,8 @@ Clone this repo, cd into it and:
 
 ### Install with Helm 3
 
+Take a look to the [K8Spin helm chart documentation](deployments/helm/k8spin-operator/README.md).
+
 ```bash
 # Create a local cluster
 $ kind create cluster
