@@ -4,7 +4,7 @@ PROJECTNAME=$(shell basename "$(PWD)")
 CLUSTER_VERSION="1.18.8"
 KIND_CLUSTER_NAME="k8spin-operator"
 PYTEST_PARAMS=""
-TAG_VERSION="1.0.0-rc9"
+TAG_VERSION="v1.0.0-rc9"
 REGISTRY="ghcr.io"
 
 .PHONY: help cluster-up cluster-down build deploy update test-e2e test-kubeconfig load kubie publish_container_image helm_chart_docs check_helm_chart_docs clean
@@ -26,8 +26,8 @@ cluster-down:
 
 ## build: Local build the operator
 build:
-	@docker build -t k8spin/k8spin-operator:v$(TAG_VERSION) . -f build/operator.Dockerfile
-	@docker build -t k8spin/k8spin-webhook:v$(TAG_VERSION) . -f build/webhook.Dockerfile
+	@docker build -t k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
+	@docker build -t k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
 
 ## deploy: Deploys the complete solution
 deploy: load
@@ -60,18 +60,18 @@ test-kubeconfig:
 	@export KUBECONFIG=.pytest-kind/k8spin-operator/kind-config-k8spin-operator
 
 load: cluster-up build
-	@kind load docker-image --name $(KIND_CLUSTER_NAME) k8spin/k8spin-operator:v$(TAG_VERSION)
-	@kind load docker-image --name $(KIND_CLUSTER_NAME) k8spin/k8spin-webhook:v$(TAG_VERSION)
+	@kind load docker-image --name $(KIND_CLUSTER_NAME) k8spin/k8spin-operator:$(TAG_VERSION)
+	@kind load docker-image --name $(KIND_CLUSTER_NAME) k8spin/k8spin-webhook:$(TAG_VERSION)
 
 ## kubie: Sets the kind cluster context
 kubie:
 	@kubie ctx kind-$(KIND_CLUSTER_NAME)
 
 publish_container_image:
-	@docker tag k8spin/k8spin-operator:v$(TAG_VERSION) $(REGISTRY)/k8spin/k8spin-operator:v$(TAG_VERSION)
-	@docker tag k8spin/k8spin-webhook:v$(TAG_VERSION) $(REGISTRY)/k8spin/k8spin-webhook:v$(TAG_VERSION)
-	@docker push $(REGISTRY)/k8spin/k8spin-operator:v$(TAG_VERSION)
-	@docker push $(REGISTRY)/k8spin/k8spin-webhook:v$(TAG_VERSION)
+	@docker tag k8spin/k8spin-operator:$(TAG_VERSION) $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
+	@docker tag k8spin/k8spin-webhook:$(TAG_VERSION) $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
+	@docker push $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
+	@docker push $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
 
 ## clean: Remove cached files
 clean:
