@@ -1,5 +1,8 @@
 name: "Branch"
 
+on:
+  push:
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -16,10 +19,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade virtualenv
-    - uses: docker/setup-buildx-action@v1
+    - name: Set up Docker Buildx
       id: buildx
+      uses: docker/setup-buildx-action@v1
       with:
-        install: true
+        version: latest
     - name: Available platforms
       run: echo ${{ steps.buildx.outputs.platforms }}
     - name: Execute E2E tests
