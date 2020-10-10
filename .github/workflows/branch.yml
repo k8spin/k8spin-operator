@@ -2,10 +2,24 @@ name: "Branch"
 
 on:
   push:
+  pull_request:
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - arch: armv6
+            distro: buster
+          - arch: armv7
+            distro: buster
+          - arch: aarch64
+            distro: buster
+          - arch: ppc64le
+            distro: buster
+
     steps:
     - uses: actions/checkout@master
     - uses: engineerd/setup-kind@v0.4.0
@@ -25,8 +39,14 @@ jobs:
       with:
         version: latest
     - name: Available platforms
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ${{ matrix.distro }}
       run: echo ${{ steps.buildx.outputs.platforms }}
     - name: Execute E2E tests
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ${{ matrix.distro }}
       run: |
         make test-e2e
     - name: Upload E2E logs
