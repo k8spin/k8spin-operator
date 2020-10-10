@@ -221,6 +221,8 @@ create_parser = commands.add_parser(
 delete_parser = commands.add_parser(
     "delete", help="Delete K8Spin resources")
 
+version_parser = commands.add_parser("version", help="K8SPin Version")
+
 # create commands
 get_commands = get_parser.add_subparsers(
     title="Query For", dest="sub_command")
@@ -334,5 +336,7 @@ if command and sub_command:
                            space=space, cpu=cpu, memory=memory, def_cpu=def_cpu, def_memory=def_memory)
     method_to_call = locals()[f"{command}_{sub_command}"]
     method_to_call(arg)
+elif command == "version":
+    print("K8SPin v1.0.0-rc8")
 else:
     parser.print_help()
