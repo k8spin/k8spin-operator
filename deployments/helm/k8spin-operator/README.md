@@ -11,8 +11,6 @@ The following table lists the configurable parameters of the K8spin-operator cha
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `cert-manager.enable` | Install cert-manager. required to emit k8spin certificates. | `true` |
-| `cert-manager.installCRDs` | Install cert-manager crds. | `true` |
 | `k8spin_operator.image.name` | K8spin-operator image name | `"k8spin/k8spin-operator"` |
 | `k8spin_operator.image.tag` | K8spin-operator image tag | `"dev"` |
 | `k8spin_operator.image.pullPolicy` | K8spin-operator image pull policy | `"IfNotPresent"` |
