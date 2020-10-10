@@ -54,10 +54,8 @@ $ export HELM_EXPERIMENTAL_OCI="1"
 $ helm chart pull ghcr.io/k8spin/k8spin-operator-chart:v1.0.0-rc8
 v1.0.0-rc8: Pulling from ghcr.io/k8spin/k8spin-operator-chart
 ref:     ghcr.io/k8spin/k8spin-operator-chart:v1.0.0-rc8
-digest:  db82e0c8715bc383f32a9485e4abb2d5183faa80af7b534d93f7ac0c8da8afa5
-size:    4.6 KiB
 name:    k8spin-operator
-version: 1.0.0
+version: v1.0.0-rc8
 Status: Downloaded newer chart for ghcr.io/k8spin/k8spin-operator-chart:v1.0.0-rc8
 $ helm chart export ghcr.io/k8spin/k8spin-operator-chart:v1.0.0-rc8
 $ helm install k8spin-operator ./k8spin-operator

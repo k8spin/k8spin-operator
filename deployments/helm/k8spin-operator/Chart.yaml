@@ -1,6 +1,6 @@
 apiVersion: v2
 name: k8spin-operator
 type: application
-version: "1.0.0"
-appVersion: "1.0.0"
+version: "v1.0.0-rc8"
+appVersion: "v1.0.0-rc8"
 description: A Helm chart for k8spin-operator
