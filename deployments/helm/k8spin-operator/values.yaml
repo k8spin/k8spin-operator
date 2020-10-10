@@ -1,27 +1,27 @@
 cert-manager:
-  enable: true
-  installCRDs: true
+  enable: true # Install cert-manager. Required to emit K8Spin certificates.
+  installCRDs: true # Install cert-manager CRDs.
 
 k8spin_operator:
-  image: 
-    name: k8spin/k8spin-operator # k8spin-operator image name 
-    tag: dev  # k8spin-operator image tag 
-    pullPolicy: IfNotPresent # k8spin-operator image pull policy 
+  image:
+    name: k8spin/k8spin-operator # k8spin-operator image name
+    tag: dev # k8spin-operator image tag
+    pullPolicy: IfNotPresent # k8spin-operator image pull policy
   logging_level: DEBUG # k8spin-operator logging level
   reconciliation_interval_seconds: "15" # k8spin-operator reconciliation interval in seconds
   serviceAccount:
-    create: true # Create the k8spin-operator service account 
+    create: true # Create the k8spin-operator service account
     name: # The k8spin-operator service account name
 
 k8spin_webhook:
-  image: 
-    name: k8spin/k8spin-webhook # k8spin-webhook image name 
-    tag: dev # k8spin-webhook image tag 
-    pullPolicy: IfNotPresent # k8spin-webhook image pull policy 
+  image:
+    name: k8spin/k8spin-webhook # k8spin-webhook image name
+    tag: dev # k8spin-webhook image tag
+    pullPolicy: IfNotPresent # k8spin-webhook image pull policy
   logging_level: DEBUG # k8spin-webhook logging level
   serviceAccount:
-    create: true # Create the k8spin-webhook service account 
+    create: true # Create the k8spin-webhook service account
     name: # The k8spin-webhook service account name
 
 rbac:
-  create: true  # Deploys required roles
+  create: true # Deploys default roles
