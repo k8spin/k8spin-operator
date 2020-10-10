@@ -80,6 +80,11 @@ publish_container_image:
 	@docker push $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
 	@docker push $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
 
+
+publish_container_image_multiarch:
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7  -t k8spin/k8spin-operator:dev . -f build/operator.Dockerfile --push $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t k8spin/k8spin-webhook:dev . -f build/webhook.Dockerfile --push $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
+
 ## clean: Remove cached files
 clean:
 	@rm -rf .kube .pytest_cache .pytest-kind .venv-test .venv-chart-docs e2elogs
