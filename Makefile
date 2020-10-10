@@ -4,7 +4,7 @@ PROJECTNAME=$(shell basename "$(PWD)")
 CLUSTER_VERSION="1.18.8"
 KIND_CLUSTER_NAME="k8spin-operator"
 PYTEST_PARAMS=""
-TAG_VERSION="v1.0.0-rc11"
+TAG_VERSION="v1.0.0-rc12"
 REGISTRY="ghcr.io"
 
 .PHONY: help cluster-up cluster-down build deploy update test-e2e test-kubeconfig load kubie publish_container_image helm_chart_docs check_helm_chart_docs clean
