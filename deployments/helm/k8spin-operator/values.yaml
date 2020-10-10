@@ -1,7 +1,3 @@
-cert-manager:
-  enable: true # Install cert-manager. Required to emit K8Spin certificates.
-  installCRDs: true # Install cert-manager CRDs.
-
 k8spin_operator:
   image:
     name: k8spin/k8spin-operator # k8spin-operator image name
