@@ -19,6 +19,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade virtualenv
+    - name: Execute E2E tests
+      run: |
+        make test-e2e
+    - name: Upload E2E logs
+      continue-on-error: true
+      uses: actions/upload-artifact@v1
+      with:
+        name: e2elogs
+        path: e2elogs
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
       with:
@@ -30,15 +39,9 @@ jobs:
         version: latest
     - name: Available platforms
       run: echo ${{ steps.buildx.outputs.platforms }}
-    - name: Execute E2E tests
+    - name: Build all arch images
       run: |
-        make test-e2e
-    - name: Upload E2E logs
-      continue-on-error: true
-      uses: actions/upload-artifact@v1
-      with:
-        name: e2elogs
-        path: e2elogs
+        make buildx
     - name: Publish image
       run: |
         docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"

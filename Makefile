@@ -25,10 +25,16 @@ cluster-down:
 	@kind delete cluster --name $(KIND_CLUSTER_NAME) -q && echo "Cluster deleted" || echo "Cluster does not exist exists"
 
 ## build: Local build the operator
-## platforms defined in https://github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63
 build:
-	@docker build -t k8spin/k8spin-operator:dev -t k8spin/k8spin-operator:latest -t k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
-	@docker build -t k8spin/k8spin-webhook:dev -t k8spin/k8spin-webhook:latest -t k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
+	@docker build -t k8spin/k8spin-operator:dev . -f build/operator.Dockerfile
+	@docker build -t k8spin/k8spin-webhook:dev . -f build/webhook.Dockerfile
+
+## build: Local build the operator using buildx and multiple platforms
+## platforms defined in https://github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63
+## docker > 19.03 required
+buildx:
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7  -t k8spin/k8spin-operator:dev . -f build/operator.Dockerfile
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t k8spin/k8spin-webhook:dev . -f build/webhook.Dockerfile
 
 ## deploy: Deploys the complete solution
 deploy: load
