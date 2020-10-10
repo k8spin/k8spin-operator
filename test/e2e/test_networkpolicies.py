@@ -14,7 +14,7 @@ from k8spin_common.resources.tenant import tenant_namespacename_generator, get_t
 from k8spin_common.resources.space import space_namespacename_generator, get_space
 from k8spin_common import NetworkPolicy
 
-TIMEOUT = 2
+TIMEOUT = 5
 ORG_NAME = "acme"
 TENANT_NAME = "looney"
 SPACE_NAME = "tunes"
