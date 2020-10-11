@@ -19,7 +19,7 @@ spec:
       serviceAccountName: k8spin-webhook
       containers:
       - name: k8spin-webhook
-        image: k8spin/k8spin-webhook:v1.0.2
+        image: k8spin/k8spin-webhook:v1.0.3
         ports:
         - containerPort: 443
         env:
