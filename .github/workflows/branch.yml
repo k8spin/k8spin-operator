@@ -2,6 +2,8 @@ name: "Branch"
 
 on:
   push:
+    branches:
+      - "*"
 
 jobs:
   e2e:
@@ -42,7 +44,14 @@ jobs:
     - name: Build all arch images
       run: |
         make buildx
-    - name: Publish image
+    - name: Publish latest image
+      if: "contains(github.ref, 'master')"
       run: |
         docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+        make TAG_VERSION=latest publish_container_image_multiarch
+    - name: Publish dev images
+      if: "!contains(github.ref, 'master')"
+      run: |
+        docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+        make TAG_VERSION=dev publish_container_image_multiarch
         make TAG_VERSION=$GITHUB_SHA publish_container_image_multiarch
