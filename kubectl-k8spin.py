@@ -337,6 +337,6 @@ if command and sub_command:
     method_to_call = locals()[f"{command}_{sub_command}"]
     method_to_call(arg)
 elif command == "version":
-    print("K8SPin v1.0.1")
+    print("K8SPin v1.0.2")
 else:
     parser.print_help()

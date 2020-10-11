@@ -19,7 +19,7 @@ spec:
       serviceAccountName: k8spin-operator
       containers:
       - name: k8spin-operator
-        image: k8spin/k8spin-operator:v1.0.1
+        image: k8spin/k8spin-operator:v1.0.2
         env:
         - name: LOGGING_LEVEL
           value: DEBUG
