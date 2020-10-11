@@ -53,13 +53,13 @@ $ helm install cert-manager jetstack/cert-manager --version v1.0.2 --set install
 $ kubectl wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
 # Deploy K8Spin operator
 $ export HELM_EXPERIMENTAL_OCI="1"
-$ helm chart pull ghcr.io/k8spin/k8spin-operator-chart:v1.0.1
-v1.0.1: Pulling from ghcr.io/k8spin/k8spin-operator-chart
-ref:     ghcr.io/k8spin/k8spin-operator-chart:v1.0.1
+$ helm chart pull ghcr.io/k8spin/k8spin-operator-chart:v1.0.2
+v1.0.2: Pulling from ghcr.io/k8spin/k8spin-operator-chart
+ref:     ghcr.io/k8spin/k8spin-operator-chart:v1.0.2
 name:    k8spin-operator
-version: v1.0.1
-Status: Downloaded newer chart for ghcr.io/k8spin/k8spin-operator-chart:v1.0.1
-$ helm chart export ghcr.io/k8spin/k8spin-operator-chart:v1.0.1
+version: v1.0.2
+Status: Downloaded newer chart for ghcr.io/k8spin/k8spin-operator-chart:v1.0.2
+$ helm chart export ghcr.io/k8spin/k8spin-operator-chart:v1.0.2
 $ helm install k8spin-operator ./k8spin-operator
 $ kubectl wait --for=condition=Available deployment --timeout=2m --all
 ```

@@ -4,7 +4,7 @@ PROJECTNAME=$(shell basename "$(PWD)")
 CLUSTER_VERSION="1.18.8"
 KIND_CLUSTER_NAME="k8spin-operator"
 PYTEST_PARAMS=""
-TAG_VERSION="v1.0.1"
+TAG_VERSION="v1.0.2"
 REGISTRY="ghcr.io"
 
 .PHONY: help cluster-up cluster-down build deploy update test-e2e test-kubeconfig load kubie publish_container_image helm_chart_docs check_helm_chart_docs clean
@@ -26,8 +26,8 @@ cluster-down:
 
 ## build: Local build the operator
 build:
-	@docker build -t k8spin/k8spin-operator:dev . -f build/operator.Dockerfile
-	@docker build -t k8spin/k8spin-webhook:dev . -f build/webhook.Dockerfile
+	@docker build -t k8spin/k8spin-operator:dev -t k8spin/k8spin-operator:latest -t k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
+	@docker build -t k8spin/k8spin-webhook:dev -t k8spin/k8spin-webhook:latest -t k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
 
 ## build: Local build the operator using buildx and multiple platforms
 ## platforms defined in https://github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63
@@ -83,7 +83,7 @@ publish_container_image:
 
 publish_container_image_multiarch:
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7  -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile --push
-	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile --push 
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile --push
 
 ## clean: Remove cached files
 clean:
