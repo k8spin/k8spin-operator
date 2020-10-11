@@ -30,11 +30,25 @@ jobs:
       with:
         name: e2elogs
         path: e2elogs
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: all
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        version: latest
+    - name: Available platforms
+      run: echo ${{ steps.buildx.outputs.platforms }}
+    - name: Build all arch images
+      run: |
+        make buildx
     - name: Publish image
       run: |
         docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-        make TAG_VERSION=${GITHUB_REF##*/} publish_container_image
-        make TAG_VERSION=latest publish_container_image
+        make TAG_VERSION=${GITHUB_REF##*/} publish_container_image_multiarch
+        make TAG_VERSION=latest publish_container_image_multiarch
     - name: Publish Helm Chart
       env:
         HELM_EXPERIMENTAL_OCI: "1"
