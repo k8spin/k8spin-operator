@@ -1,6 +1,9 @@
 name: "Linter"
 
-on: push
+on:
+  push:
+    branches:
+      - "*"
 
 jobs:
   lint:
