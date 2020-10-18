@@ -14,10 +14,10 @@ kind_cluster_name = "k8spin-operator-e2e"
 def cluster(kind_cluster) -> Generator[dict, None, None]:
     kubectl = kind_cluster.kubectl
 
-    operator_image = "k8spin/k8spin-operator:v1.0.3"
+    operator_image = "k8spin/k8spin-operator:v1.0.4"
     kind_cluster.load_docker_image(operator_image)
 
-    webhook_image = "k8spin/k8spin-webhook:v1.0.3"
+    webhook_image = "k8spin/k8spin-webhook:v1.0.4"
     kind_cluster.load_docker_image(webhook_image)
 
     logging.info("Deploying Calico")
