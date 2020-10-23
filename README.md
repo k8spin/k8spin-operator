@@ -125,7 +125,7 @@ dev    9m24s
 Run a workload in the dev space:
 
 ```bash
-$ kubectl run nginx --image nginx --replicas=2 -n org-example-tenant-crm-space-dev --as Angel --as-group "K8Spin.cloud"
+$ kubectl run nginx --image nginxinc/nginx-unprivileged --replicas=2 -n org-example-tenant-crm-space-dev --as Angel --as-group "K8Spin.cloud"
 pod/nginx created
 ```
 
