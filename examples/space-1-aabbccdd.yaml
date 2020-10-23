@@ -1,0 +1,36 @@
+apiVersion: k8spin.cloud/v1
+kind: Tenant
+metadata:
+  namespace: org-aabbccdd
+  name: app1
+spec:
+  resources:
+    cpu: "3"
+    memory: "3G"
+  roles:
+    - name: tenant-admin # Cluster Role
+      groups: ["K8Spin.cloud"] # User Certificate O=
+    - name: tenant-viewer # Cluster Role
+      users: ["Angel", "Pau"] # User Certificate CN=
+[root@helper examples]# cat space-1
+space-1-aabbccdd.yaml  space-1.yaml           
+[root@helper examples]# cat space-1-aabbccdd.yaml 
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-aabbccdd-tenant-app1
+  name: dev
+spec:
+  resources:
+    cpu: "2"
+    memory: "1G"
+  roles:
+    - name: space-admin # Cluster Role
+      groups: ["K8Spin.cloud"] # User Certificate O=
+    - name: space-viewer # Cluster Role
+      users: ["Hadiwinata", "Yusuf"] # User Certificate CN=
+  containers:
+    defaults:
+      resources:
+        cpu: 10m
+        memory: 64Mi
