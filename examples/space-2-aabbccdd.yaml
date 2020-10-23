@@ -1,0 +1,39 @@
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-aabbccdd-tenant-app1
+  name: pro
+spec:
+  resources:
+    cpu: "1"
+    memory: "1G"
+  containers:
+    defaults:
+      resources:
+        cpu: 10m
+        memory: 32Mi
+  allowIncomingNetwork:
+    organizations:
+      - organization_name: aabbccdd
+    tenants:
+      - organization_name: aabbccdd
+        tenant_name: app1
+    spaces:
+      - organization_name: aabbccdd
+        tenant_name: app1
+        space_name: pro
+---
+apiVersion: k8spin.cloud/v1
+kind: Space
+metadata:
+  namespace: org-aabbccdd-tenant-app1
+  name: pro
+spec:
+  resources:
+    cpu: "1"
+    memory: "2G"
+  containers:
+    defaults:
+      resources:
+        cpu: 10m
+        memory: 32Mi
