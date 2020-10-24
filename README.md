@@ -49,17 +49,17 @@ $ kind create cluster
 # Deploy cert-manager
 $ helm repo add jetstack https://charts.jetstack.io
 $ helm repo update
-$ helm install cert-manager jetstack/cert-manager --version v1.0.4 --set installCRDs=true
+$ helm install cert-manager jetstack/cert-manager --version v1.0.5 --set installCRDs=true
 $ kubectl wait --for=condition=Available deployment --timeout=2m -n cert-manager --all
 # Deploy K8Spin operator
 $ export HELM_EXPERIMENTAL_OCI="1"
-$ helm chart pull ghcr.io/k8spin/k8spin-operator-chart:v1.0.4
-v1.0.4: Pulling from ghcr.io/k8spin/k8spin-operator-chart
-ref:     ghcr.io/k8spin/k8spin-operator-chart:v1.0.4
+$ helm chart pull ghcr.io/k8spin/k8spin-operator-chart:v1.0.5
+v1.0.5: Pulling from ghcr.io/k8spin/k8spin-operator-chart
+ref:     ghcr.io/k8spin/k8spin-operator-chart:v1.0.5
 name:    k8spin-operator
-version: v1.0.4
-Status: Downloaded newer chart for ghcr.io/k8spin/k8spin-operator-chart:v1.0.4
-$ helm chart export ghcr.io/k8spin/k8spin-operator-chart:v1.0.4
+version: v1.0.5
+Status: Downloaded newer chart for ghcr.io/k8spin/k8spin-operator-chart:v1.0.5
+$ helm chart export ghcr.io/k8spin/k8spin-operator-chart:v1.0.5
 $ helm install k8spin-operator ./k8spin-operator
 $ kubectl wait --for=condition=Available deployment --timeout=2m --all
 ```
