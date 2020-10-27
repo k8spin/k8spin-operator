@@ -1,0 +1,8 @@
+maintainers:
+  - angelbarrera92
+  - paurosello
+
+features:
+  - release_notes
+  - pr_description_required
+  - comments

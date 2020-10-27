@@ -2,6 +2,7 @@
 
 ![Build Status](https://action-badges.now.sh/k8spin/k8spin-operator)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Derek](https://alexellis.o6s.io/badge?repo=k8spin-operator&owner=k8spin)](https://github.com/alexellis/derek/)
 
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/k8spin.svg?style=social&label=Follow%20%40k8spin)](https://twitter.com/k8spin)
 [![Join the chat at https://slack.kubernetes.io](https://img.shields.io/badge/style-register-green.svg?style=social&label=Slack)](https://slack.kubernetes.io)
