@@ -1,7 +1,7 @@
 k8spin_operator:
   image:
     name: ghcr.io/k8spin/k8spin-operator # k8spin-operator image name
-    tag: v1.0.5 # k8spin-operator image tag
+    tag: v1.0.6 # k8spin-operator image tag
     pullPolicy: IfNotPresent # k8spin-operator image pull policy
   logging_level: DEBUG # k8spin-operator logging level
   reconciliation_interval_seconds: "15" # k8spin-operator reconciliation interval in seconds
@@ -12,7 +12,7 @@ k8spin_operator:
 k8spin_webhook:
   image:
     name: ghcr.io/k8spin/k8spin-webhook # k8spin-webhook image name
-    tag: v1.0.5 # k8spin-webhook image tag
+    tag: v1.0.6 # k8spin-webhook image tag
     pullPolicy: IfNotPresent # k8spin-webhook image pull policy
   logging_level: DEBUG # k8spin-webhook logging level
   serviceAccount:
