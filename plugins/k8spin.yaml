@@ -21,7 +21,7 @@ spec:
         values:
         - darwin
         - linux
-    sha256: aafaa597eb2013b746f7533a22a3c1ae2566696a824cf5f25e26deb11ae368a2
-    uri: https://github.com/k8spin/k8spin-operator/releases/download/v1.0.4/kubectl-k8spin.tar.gz
+    sha256: 3fa602cfa7fa8761d9a7d170fcce1d6696bb15c29f3c6e94a41c3d4bb15a68bb
+    uri: https://github.com/k8spin/k8spin-operator/releases/download/v1.0.6/kubectl-k8spin.tar.gz
   shortDescription: Manage K8Spin resources
-  version: v1.0.4
+  version: v1.0.6
