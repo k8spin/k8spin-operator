@@ -1,0 +1,6 @@
+flask
+Flask-APScheduler
+loguru
+six
+healthcheck
+pykube-ng
