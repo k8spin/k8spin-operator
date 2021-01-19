@@ -1,5 +1,5 @@
 import pykube
-from k8spin_common import Organization, Space, Tenant
+from k8spin_common import Organization
 from k8spin_common.helper import kubernetes_api
 
 
@@ -14,9 +14,9 @@ def do_feed(api):
             spaces = tenant.spaces
             for space in spaces:
                 print(space)
-                ns = space.space_namespace
+                namespace = space.space_namespace
                 quota = pykube.ResourceQuota.objects(
-                    api, ns.name).get(name="quotas")
+                    api, namespace.name).get(name="quotas")
                 quota_cpu_hard = quota.obj["status"]["hard"]["requests.cpu"]
                 quota_mem_hard = quota.obj["status"]["hard"]["requests.memory"]
                 quota_cpu_used = quota.obj["status"]["used"]["requests.cpu"]
