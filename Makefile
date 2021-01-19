@@ -98,6 +98,7 @@ lint:
 	make -C k8spin_common lint
 	make -C k8spin_operator lint
 	make -C k8spin_webhook lint
+	make -C k8spin_reporter lint
 
 ## helm_chart_docs: Creates the Helm Chart Docs
 helm_chart_docs:
