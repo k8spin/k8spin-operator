@@ -13,6 +13,7 @@ kind_cluster_name = "k8spin-operator-e2e"
 @fixture(scope="session")
 def cluster(kind_cluster) -> Generator[dict, None, None]:
     kubectl = kind_cluster.kubectl
+    os.environ["KUBECONFIG"] = str(kind_cluster.kubeconfig_path)
 
     operator_image = "ghcr.io/k8spin/k8spin-operator:latest"
     kind_cluster.load_docker_image(operator_image)
