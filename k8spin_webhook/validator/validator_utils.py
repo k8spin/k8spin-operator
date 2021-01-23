@@ -2,36 +2,8 @@ from typing import List, Tuple
 
 import k8spin_common
 from k8spin_common.helper import kubernetes_api
+from k8spin_common.resources import quotas
 from loguru import logger
-
-
-def memory_convert_unit(value: str) -> float:
-    # https://k8smeetup.github.io/docs/tasks/configure-pod-container/assign-cpu-ram-container/#cpu-and-ram-units
-    #E, P, T, G, M, K, Ei, Pi, Ti, Gi, Mi, Ki
-    value = value.replace("i", "")
-    scale_dict = {
-        "E": pow(10, 18),
-        "P": pow(10, 15),
-        "T": pow(10, 12),
-        "G": pow(10, 9),
-        "M": pow(10, 6),
-        "K": pow(10, 3)
-    }
-    for unit in scale_dict:
-        if unit in value:
-            value = value.replace(unit, "")
-            return float(value)*scale_dict[unit]
-    return float(value)
-
-
-def cpu_convert_unit(value: str) -> float:
-    # https://k8smeetup.github.io/docs/tasks/configure-pod-container/assign-cpu-ram-container/#cpu-and-ram-units
-    # 0.1, 1, 100m
-    scale = 1000
-    if "m" in value:
-        scale = 1
-        value = value.replace("m", "")
-    return float(value)*scale
 
 
 def get_namespace_type(resource: object) -> str:
@@ -41,11 +13,11 @@ def get_namespace_type(resource: object) -> str:
 
 
 def get_cpu(resource: object) -> float:
-    return cpu_convert_unit(resource["spec"]["resources"]["cpu"])
+    return quotas.cpu_convert_unit(resource["spec"]["resources"]["cpu"])
 
 
 def get_memory(resource: object) -> float:
-    return memory_convert_unit(resource["spec"]["resources"]["memory"])
+    return quotas.memory_convert_unit(resource["spec"]["resources"]["memory"])
 
 
 def check_tenant_quotas(resource: object) -> Tuple[bool, str]:
