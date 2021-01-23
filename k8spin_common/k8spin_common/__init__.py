@@ -31,6 +31,10 @@ class Organization(APIObject):
         namespace = self.organization_namespace
         return Tenant.objects(self.api, namespace.name).all()
 
+    @property
+    def resources(self) -> list:
+        return self.obj["spec"]["resources"]
+
 
 class Tenant(NamespacedAPIObject):
 
@@ -64,6 +68,10 @@ class Tenant(NamespacedAPIObject):
     def spaces(self) -> list:
         namespace = self.tenant_namespace
         return Space.objects(self.api, namespace.name).all()
+
+    @property
+    def resources(self) -> list:
+        return self.obj["spec"]["resources"]
 
 
 class Space(NamespacedAPIObject):
