@@ -63,7 +63,7 @@ test-e2e: build
 		test/e2e;
 
 test-kubeconfig:
-	@export KUBECONFIG=.pytest-kind/k8spin-operator/kind-config-k8spin-operator
+	@export KUBECONFIG=.pytest-kind/k8spin-operator/kubeconfig
 
 load: cluster-up build
 	@kind load docker-image --name $(KIND_CLUSTER_NAME) $(REGISTRY)/k8spin/k8spin-operator:latest

@@ -21,8 +21,8 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     webhook_image = "ghcr.io/k8spin/k8spin-webhook:latest"
     kind_cluster.load_docker_image(webhook_image)
 
-    webhook_image = "ghcr.io/k8spin/k8spin-reporter:latest"
-    kind_cluster.load_docker_image(webhook_image)
+    reporter_image = "ghcr.io/k8spin/k8spin-reporter:latest"
+    kind_cluster.load_docker_image(reporter_image)
 
     logging.info("Deploying Calico")
     kubectl("delete", "daemonset", "-n" "kube-system", "kindnet")
