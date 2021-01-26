@@ -37,7 +37,7 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     logging.info("Deploying K8Spin CRDS")
     kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes/crds"))
 
-    logging.info("Deploying Operator and Validator")
+    logging.info("Deploying Operator, Validator and Reporter")
     kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes"))
 
     logging.info("Waiting for rollout ...")
