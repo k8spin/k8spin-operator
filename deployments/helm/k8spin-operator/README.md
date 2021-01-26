@@ -24,6 +24,12 @@ The following table lists the configurable parameters of the K8spin-operator cha
 | `k8spin_webhook.logging_level` | K8spin-webhook logging level | `"DEBUG"` |
 | `k8spin_webhook.serviceAccount.create` | Create the k8spin-webhook service account | `true` |
 | `k8spin_webhook.serviceAccount.name` | The k8spin-webhook service account name | `null` |
+| `k8spin_reporter.image.name` | K8spin-reporter image name | `"ghcr.io/k8spin/k8spin-reporter"` |
+| `k8spin_reporter.image.tag` | K8spin-reporter image tag | `"v1.0.6"` |
+| `k8spin_reporter.image.pullPolicy` | K8spin-reporter image pull policy | `"IfNotPresent"` |
+| `k8spin_reporter.logging_level` | K8spin-reporter logging level | `"DEBUG"` |
+| `k8spin_reporter.serviceAccount.create` | Create the k8spin-reporter service account | `true` |
+| `k8spin_reporter.serviceAccount.name` | The k8spin-reporter service account name | `null` |
 | `rbac.create` | Deploys default roles | `true` |
 
 
