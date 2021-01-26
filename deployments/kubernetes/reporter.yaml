@@ -20,6 +20,7 @@ spec:
       containers:
       - name: k8spin-reporter
         image: ghcr.io/k8spin/k8spin-reporter:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: LOGGING_LEVEL
           value: DEBUG
