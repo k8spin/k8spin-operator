@@ -4,3 +4,4 @@ loguru
 six
 healthcheck
 pykube-ng
+Flask-SQLAlchemy
