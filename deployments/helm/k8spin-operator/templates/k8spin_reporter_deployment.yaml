@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8spin-reporter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "k8spin-reporter.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: k8spin-reporter
+  template:
+    metadata:
+      labels:
+        application: k8spin-reporter
+        app.kubernetes.io/name: {{ template "k8spin-reporter.name" . }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ (include "reporter.serviceAccountName" .) }}
+      containers:
+      - name: k8spin-reporter
+        image: "{{ .Values.k8spin_reporter.image.name }}:{{ .Values.k8spin_reporter.image.tag }}"
+        imagePullPolicy: {{ .Values.k8spin_reporter.image.pullPolicy }}
+        env:
+        - name: LOGGING_LEVEL
+          value: "{{ .Values.k8spin_reporter.logging_level }}"
+        - name: RECONCILIATION_INTERVAL_SECONDS
+          value: "{{ .Values.k8spin_reporter.reconciliation_interval_seconds }}"

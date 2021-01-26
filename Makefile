@@ -28,6 +28,7 @@ cluster-down:
 build:
 	@docker build -t $(REGISTRY)/k8spin/k8spin-operator:latest -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
 	@docker build -t $(REGISTRY)/k8spin/k8spin-webhook:latest -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
+	@docker build -t $(REGISTRY)/k8spin/k8spin-reporter:latest -t $(REGISTRY)/k8spin/k8spin-reporter:$(TAG_VERSION) . -f build/reporter.Dockerfile
 
 ## build: Local build the operator using buildx and multiple platforms
 ## platforms defined in https://github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63
@@ -35,6 +36,7 @@ build:
 buildx:
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-operator:latest -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-webhook:latest -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-reporter:latest -t $(REGISTRY)/k8spin/k8spin-reporter:$(TAG_VERSION) . -f build/reporter.Dockerfile
 
 ## deploy: Deploys the complete solution
 deploy: load
@@ -69,6 +71,7 @@ test-kubeconfig:
 load: cluster-up build
 	@kind load docker-image --name $(KIND_CLUSTER_NAME) $(REGISTRY)/k8spin/k8spin-operator:latest
 	@kind load docker-image --name $(KIND_CLUSTER_NAME) $(REGISTRY)/k8spin/k8spin-webhook:latest
+	@kind load docker-image --name $(KIND_CLUSTER_NAME) $(REGISTRY)/k8spin/k8spin-reporter:latest
 
 ## kubie: Sets the kind cluster context
 kubie:
@@ -77,13 +80,16 @@ kubie:
 publish_container_image:
 	@docker tag $(REGISTRY)/k8spin/k8spin-operator:latest $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
 	@docker tag $(REGISTRY)/k8spin/k8spin-webhook:latest $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
+	@docker tag $(REGISTRY)/k8spin/k8spin-reporter:latest $(REGISTRY)/k8spin/k8spin-reporter:$(TAG_VERSION)
 	@docker push $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION)
 	@docker push $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION)
+	@docker push $(REGISTRY)/k8spin/k8spin-reporter:$(TAG_VERSION)
 
 
 publish_container_image_multiarch:
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile --push
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile --push
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-reporter:$(TAG_VERSION) . -f build/reporter.Dockerfile --push
 
 ## clean: Remove cached files
 clean:
