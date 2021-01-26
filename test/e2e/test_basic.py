@@ -16,7 +16,7 @@ from k8spin_common.resources.tenant import (get_tenant,
 
 from .utils import create_org_object, create_space_object, create_tenant_object
 
-TIMEOUT = 5
+TIMEOUT = 10
 ORG_NAME = "acme"
 TENANT_NAME = "looney"
 SPACE_NAME = "tunes"
