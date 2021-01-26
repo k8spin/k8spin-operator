@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8spin-reporter
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: k8spin-reporter
+  template:
+    metadata:
+      labels:
+        application: k8spin-reporter
+    spec:
+      serviceAccountName: k8spin-reporter
+      containers:
+      - name: k8spin-reporter
+        image: ghcr.io/k8spin/k8spin-reporter:latest
+        env:
+        - name: LOGGING_LEVEL
+          value: DEBUG
+        - name: RECONCILIATION_INTERVAL_SECONDS
+          value: "15"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8spin-reporter
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: k8spin-reporter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: k8spin-operator
+    namespace: default
