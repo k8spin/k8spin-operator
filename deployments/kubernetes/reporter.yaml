@@ -42,5 +42,5 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: k8spin-operator
+    name: k8spin-reporter
     namespace: default
