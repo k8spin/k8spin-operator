@@ -1,12 +1,11 @@
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from healthcheck import HealthCheck
 
 from k8spin_reporter import data, feed
-
 scheduler = APScheduler()
 
 app = Flask(__name__)
@@ -26,6 +25,26 @@ db = SQLAlchemy(app)
 def asyncFeed():
     feed.do_feed(db.engine)
 
+
+@app.route('/api')
+def api():
+    return jsonify({"msg": "ok"})
+
+@app.route('/api/organizations')
+def api_orgs():
+    return jsonify(data.orgs())
+
+@app.route('/api/tenants')
+def api_orgs():
+    return jsonify(data.tenants())
+
+@app.route('/api/spaces')
+def api_orgs():
+    return jsonify(data.space())
+
+@app.route('/report')
+def report():
+    return render_template("report.html")
 
 @app.route('/organization')
 def organizations():
