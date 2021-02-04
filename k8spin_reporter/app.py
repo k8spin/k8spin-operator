@@ -26,30 +26,24 @@ def asyncFeed():
     feed.do_feed(db.engine)
 
 
-@app.route('/api')
-def api():
-    return jsonify({"msg": "ok"})
-
-@app.route('/api/organizations')
-def api_orgs():
-    return jsonify(data.orgs())
-
-@app.route('/api/tenants')
-def api_orgs():
-    return jsonify(data.tenants())
-
-@app.route('/api/spaces')
-def api_orgs():
-    return jsonify(data.space())
-
 @app.route('/report')
 def report():
     return render_template("report.html")
 
-@app.route('/organization')
+@app.route('/api/organizations')
 def organizations():
     orgs = data.orgs(db.engine)
     return jsonify(orgs)
+
+@app.route('/api/organizations/<organization_id>/tenants')
+def tenants(organization_id):
+    tenants = data.tenants(db.engine, organization_id)
+    return jsonify(tenants)
+
+@app.route('/api/organizations/<organization_id>/tenants/<tenant_id>/spaces')
+def spaces(organization_id, tenant_id):
+    spaces = data.spaces(db.engine, tenant_id)
+    return jsonify(spaces)
 
 
 if __name__ == "__main__":
