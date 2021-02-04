@@ -13,7 +13,7 @@ help: Makefile
 
 ## install: Install the project
 install:
-	@virtualenv -p python3.8 .venv
+	@virtualenv -p python3.9 .venv
 	source .venv/bin/activate; \
 	pip install -r requirements-dev.txt; \
 	pip install -e ../k8spin_common; \
