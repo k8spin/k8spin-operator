@@ -3,3 +3,4 @@ loguru
 jsonpatch
 six
 healthcheck
+pykube-ng
