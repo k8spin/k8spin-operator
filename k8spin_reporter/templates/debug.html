@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block additional_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hello Bulma!</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<link href="{{ url_for('static', filename='css/all.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='debug.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+
+    <div class="container" id="orgs">
+    </div>
+    <div class="container">
+        <button class="button" id="refresh">
+            Refresh
+        </button>
+    </div>
+</section>
+{% endblock %}
