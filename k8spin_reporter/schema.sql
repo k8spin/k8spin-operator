@@ -43,8 +43,12 @@ CREATE TABLE space_resources (
 CREATE TABLE space_usage (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   reported TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  organization_id varchar(250),
+  tenant_id varchar(250),
   space_id varchar(250),
   cpu float,
   memory float,
+  FOREIGN KEY(organization_id) REFERENCES organization(id),
+  FOREIGN KEY(tenant_id) REFERENCES tenant(id),
   FOREIGN KEY(space_id) REFERENCES space(id)
 );
