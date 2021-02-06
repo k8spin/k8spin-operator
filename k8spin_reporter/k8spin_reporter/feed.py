@@ -54,7 +54,7 @@ def feed_space(api, db_engine, org_id, tenant_id, space):
         f"Organization: {org_id}. Tenant {tenant_id}. Space {space.name}")
     print(
         f"CPU: {cpu}/{space_resources['cpu']}. Memory: {memory}/{space_resources['memory']}")
-    insert_space_usage(db_engine, space_id, cpu, memory)
+    insert_space_usage(db_engine, org_id, tenant_id, space_id, cpu, memory)
 
 
 def org_exists(db_engine, uid):
@@ -117,7 +117,7 @@ def insert_space_resources(db_engine, uid, cpu, memory):
     print(f"Current space resources inserted in DB with id {r_id}")
 
 
-def insert_space_usage(db_engine, space_id, cpu, memory):
-    query = f"INSERT INTO space_usage(space_id,cpu,memory) VALUES ('{space_id}', {quotas.cpu_convert_unit(cpu)}, {quotas.memory_convert_unit(memory)})"
+def insert_space_usage(db_engine, organization_id, tenant_id, space_id, cpu, memory):
+    query = f"INSERT INTO space_usage(organization_id, tenant_id, space_id,cpu,memory) VALUES ('{organization_id}','{tenant_id}','{space_id}', {quotas.cpu_convert_unit(cpu)}, {quotas.memory_convert_unit(memory)})"
     r_id = db.insert(db_engine, query)
     print(f"Current space usage inserted in DB with id {r_id}")
