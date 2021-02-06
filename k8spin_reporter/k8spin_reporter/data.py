@@ -15,6 +15,26 @@ def orgs(db_engine):
         })
     return data
 
+
+def org_current_resources(db_engine, organization_id):
+    data = []
+    query = f"""
+        SELECT cpu,memory
+        FROM organization_resources
+        WHERE organization_id = "{organization_id}"
+        ORDER BY id DESC LIMIT 1
+    """
+    rows = db.query(db_engine, query)
+    for r in rows:
+        data.append({
+            "cpu": r[0],
+            "memory": r[1]
+        })
+    if len(data) != 1:
+        return None
+    return data[0]
+
+
 def tenants(db_engine, organization_id):
     data = []
     query = f"""
@@ -30,6 +50,7 @@ def tenants(db_engine, organization_id):
         })
     return data
 
+
 def spaces(db_engine, tenant_id):
     data = []
     query = f"""
@@ -44,6 +65,7 @@ def spaces(db_engine, tenant_id):
             "name": r[1]
         })
     return data
+
 
 def space_usage(db_engine, start_date, finish_date, space_id):
     data = []

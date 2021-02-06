@@ -26,21 +26,35 @@ def asyncFeed():
     feed.do_feed(db.engine)
 
 
-@app.route('/report')
+@app.route("/debug")
+def debug():
+    return render_template("debug.html")
+
+
+@app.route("/report")
 def report():
     return render_template("report.html")
 
-@app.route('/api/organizations')
+
+@app.route("/api/organizations")
 def organizations():
     orgs = data.orgs(db.engine)
     return jsonify(orgs)
 
-@app.route('/api/organizations/<organization_id>/tenants')
+
+@app.route("/api/organizations/<organization_id>/resources")
+def org_resources(organization_id):
+    resources = data.org_current_resources(db.engine, organization_id)
+    return jsonify(resources)
+
+
+@app.route("/api/organizations/<organization_id>/tenants")
 def tenants(organization_id):
     tenants = data.tenants(db.engine, organization_id)
     return jsonify(tenants)
 
-@app.route('/api/organizations/<organization_id>/tenants/<tenant_id>/spaces')
+
+@app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/spaces")
 def spaces(organization_id, tenant_id):
     spaces = data.spaces(db.engine, tenant_id)
     return jsonify(spaces)
@@ -50,4 +64,4 @@ if __name__ == "__main__":
     health = HealthCheck(app, "/health")
     scheduler.init_app(app)
     scheduler.start()
-    app.run()
+    app.run(debug=True)
