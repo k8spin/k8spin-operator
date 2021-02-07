@@ -48,6 +48,12 @@ def org_resources(organization_id):
     return jsonify(resources)
 
 
+@app.route("/api/organizations/<organization_id>/history")
+def org_history(organization_id):
+    resources = data.org_history_resouces(db.engine, organization_id)
+    return jsonify(resources)
+
+
 @app.route("/api/organizations/<organization_id>/tenants")
 def tenants(organization_id):
     tenants = data.tenants(db.engine, organization_id)
