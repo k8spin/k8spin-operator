@@ -57,6 +57,52 @@ def org_current_resources(db_engine, organization_id):
     return data[0]
 
 
+# TODO: Currently it returns up to 7 days of data. Aggregated by day.
+# TODO: Make it configurable by day, hour...
+def org_history_resouces(db_engine, organization_id):
+    data = []
+    query = f"""
+        SELECT used.day, allocated.allocated_cpu, used.used_cpu, allocated.allocated_memory, used.used_memory
+
+        FROM (
+
+            SELECT organization_id, day, sum(cpu) as used_cpu, sum(memory) as used_memory
+            FROM (
+                SELECT organization_id, tenant_id, space_id, strftime('%Y%m%d', reported) as day, avg(cpu) as cpu, avg(memory) as memory
+                FROM space_usage
+                WHERE organization_id = "{organization_id}"
+                GROUP BY organization_id, tenant_id, space_id, strftime('%Y%m%d', reported)
+            )
+            GROUP BY organization_id, day
+
+        ) used,
+
+        (
+            SELECT organization_id, strftime('%Y%m%d', reported) as day, avg(cpu) as allocated_cpu, avg(memory) as allocated_memory
+            FROM organization_resources
+            WHERE organization_id = "{organization_id}"
+            GROUP BY organization_id, strftime('%Y%m%d', reported)
+
+        ) allocated
+
+        WHERE used.organization_id = "{organization_id}"
+        AND used.organization_id = allocated.organization_id
+        AND used.day = allocated.day
+        ORDER BY used.day DESC
+        LIMIT 7;
+    """
+    rows = db.query(db_engine, query, False)
+    for r in rows:
+        data.append({
+            "day": r[0],
+            "allocated_cpu": r[1],
+            "used_cpu": r[2],
+            "allocated_memory": r[3],
+            "used_memory": r[4],
+        })
+    return data
+
+
 def tenants(db_engine, organization_id):
     data = []
     query = f"""
