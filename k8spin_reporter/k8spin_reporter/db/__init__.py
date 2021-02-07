@@ -2,11 +2,14 @@ import os
 from contextlib import closing
 
 
-def query(db_engine, q):
+def query(db_engine, q, script=False):
     rows = None
     with closing(db_engine.raw_connection()) as connection:
         with closing(connection.cursor()) as cursor:
-            rows = cursor.execute(q).fetchall()
+            if script:
+                rows = cursor.executescript(q).fetchall()
+            else:
+                rows = cursor.execute(q).fetchall()
     return rows
 
 
