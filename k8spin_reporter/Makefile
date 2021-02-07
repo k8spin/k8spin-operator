@@ -24,7 +24,7 @@ lint: install
 	pylint app.py k8spin_reporter; \
 
 ## run: Run it locally
-run: install kubeconfig resetdb
+run: install kubeconfig
 	source .venv/bin/activate; \
 	KUBECONFIG=$(shell pwd)/kubeconfig python app.py
 

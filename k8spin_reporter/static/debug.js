@@ -40,14 +40,14 @@ function organization_resources(org) {
             <span class=\"icon\"> \
                 <i class=\"fas fa-memory\"></i> \
             </span> \
-        <span>"+data.memory+"</span> \
+        <span>"+data.used_memory+"/"+data.allocated_memory+"</span> \
         </span></p> \
         <p>\
         <span class=\"icon-text\"> \
             <span class=\"icon\"> \
                 <i class=\"fas fa-microchip\"></i> \
             </span> \
-        <span>"+data.cpu+"</span> \
+        <span>"+data.used_cpu+"/"+data.allocated_cpu+"</span> \
         </span></p>"
         $("#" + org.id + "").append(content);
     });
