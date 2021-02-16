@@ -29,9 +29,7 @@ build:
 	@docker build -t $(REGISTRY)/k8spin/k8spin-operator:latest -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
 	@docker build -t $(REGISTRY)/k8spin/k8spin-webhook:latest -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
 
-## build: Local build the operator using buildx and multiple platforms
-## platforms defined in https://github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63
-## docker > 19.03 required
+## build: Local build the operator using buildx and multiple platforms platforms defined in github.com/containerd/containerd/blob/v1.2.6/platforms/platforms.go#L63 docker 19.03 required
 buildx:
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-operator:latest -t $(REGISTRY)/k8spin/k8spin-operator:$(TAG_VERSION) . -f build/operator.Dockerfile
 	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $(REGISTRY)/k8spin/k8spin-webhook:latest -t $(REGISTRY)/k8spin/k8spin-webhook:$(TAG_VERSION) . -f build/webhook.Dockerfile
@@ -49,8 +47,7 @@ update: load
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) delete -f ./deployments/kubernetes/ --wait=true -n default
 	@kubectl --context kind-$(KIND_CLUSTER_NAME) apply -f ./deployments/kubernetes/ -n default
 
-## test-e2e: End-to-End tests. Use `PYTEST_ADDOPTS=--keep-cluster make test-e2e` to keep cluster
-## --workers auto could be added when we want multiple workers installing the package pytest-parallel
+## test-e2e: End-to-End tests. Use `PYTEST_ADDOPTS=--keep-cluster make test-e2e` to keep cluster --workers auto could be added when we want multiple workers installing the package pytest-parallel
 test-e2e: build
 	@virtualenv -p python3.8 .venv-test
 	source .venv-test/bin/activate; \
