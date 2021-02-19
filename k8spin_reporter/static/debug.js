@@ -22,7 +22,9 @@ function organizations() {
                         </div>\
                         <div class=\"column\" id=\""+ org.id + "-resources\">\
                         </div>\
-                        <div class=\"column\" id=\""+ org.id + "-history\">\
+                        <div class=\"column\" id=\""+ org.id + "-cpu-history\">\
+                        </div>\
+                        <div class=\"column\" id=\""+ org.id + "-memory-history\">\
                         </div>\
                     </div>\
                 </div>";
@@ -59,11 +61,16 @@ function organization_history(org) {
     api_org_resources = "/api/organizations/" + org.id + "/history";
     $.getJSON(api_org_resources, function (data) {
         // Prepare the canvas
-        content = "<canvas id=\"" + org.id + "-chart\"></canvas>";
-        $("#" + org.id + "-history").append(content);
+        cpuContent = "<canvas id=\"" + org.id + "-cpu-chart\"></canvas>";
+        memoryContent = "<canvas id=\"" + org.id + "-memory-chart\"></canvas>";
+        $("#" + org.id + "-cpu-history").append(cpuContent);
+        $("#" + org.id + "-memory-history").append(memoryContent);
         // Prepare the data
-        // TODO: Consider dedup the graph. CPU separated from Memory.
-        chartData = {
+        chartCPUData = {
+            labels: [],
+            datasets: []
+        }
+        chartMemoryData = {
             labels: [],
             datasets: []
         }
@@ -83,20 +90,21 @@ function organization_history(org) {
             label: "Memory Allocated",
             data: []
         }
-        for (var i = 0; i < data.length; i++) {
+        for (var i = (data.length-1); i >= 0; i--) {
             record = data[i]
 
-            chartData.labels.push(record.day);
+            chartCPUData.labels.push(record.day);
+            chartMemoryData.labels.push(record.day);
 
             cpu_used_records.data.push(record.used_cpu);
             cpu_allocated_records.data.push(record.allocated_cpu);
             memory_used_records.data.push(record.used_memory);
             memory_allocated_records.data.push(record.allocated_memory);
         }
-        chartData.datasets.push(cpu_used_records);
-        chartData.datasets.push(memory_used_records);
-        chartData.datasets.push(cpu_allocated_records);
-        chartData.datasets.push(memory_allocated_records);
+        chartCPUData.datasets.push(cpu_used_records);
+        chartMemoryData.datasets.push(memory_used_records);
+        chartCPUData.datasets.push(cpu_allocated_records);
+        chartMemoryData.datasets.push(memory_allocated_records);
         // TODO Optimize
         var chartOptions = {
             legend: {
@@ -108,7 +116,8 @@ function organization_history(org) {
                 }
             }
         };
-        draw_graph(chartData, chartOptions, org.id + "-chart");
+        draw_graph(chartCPUData, chartOptions, org.id + "-cpu-chart");
+        draw_graph(chartMemoryData, chartOptions, org.id + "-memory-chart");
     });
 }
 
