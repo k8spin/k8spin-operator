@@ -30,8 +30,8 @@ def gen_org_resources(orgs, since, hour_step):
             data.append({
                 "reported": data_date,
                 "organization_id": org.get("id"),
-                "cpu": random.randrange(1000, 20000, 1000),
-                "memory": random.randrange(8589934592, 17179869184, 1073741824),
+                "cpu": random.randrange(5, 10, 1),
+                "memory": random.randrange(512, 1024, 128),
             })
     return data
 
@@ -57,8 +57,8 @@ def gen_tenant_resources(tenants, since, hour_step):
             data.append({
                 "reported": data_date,
                 "tenant_id": tenant.get("id"),
-                "cpu": random.randrange(1000, 2000, 1000),
-                "memory": random.randrange(4294967296, 8589934592, 1073741824),
+                "cpu": random.randrange(3, 5, 1),
+                "memory": random.randrange(128, 512, 128),
             })
     return data
 
@@ -86,8 +86,8 @@ def gen_space_resources(spaces, since, hour_step):
             data.append({
                 "reported": data_date,
                 "space_id": space.get("id"),
-                "cpu": random.randrange(0, 1000, 1000),
-                "memory": random.randrange(1073741824, 4294967296, 1073741824),
+                "cpu": random.randrange(1, 3, 1),
+                "memory": random.randrange(128, 512, 128),
             })
     return data
 
@@ -103,8 +103,8 @@ def gen_space_usage(spaces, since, hour_step):
                 "organization_id": space.get("organization_id"),
                 "tenant_id": space.get("tenant_id"),
                 "space_id": space.get("id"),
-                "cpu": random.randrange(0, 1000, 100),
-                "memory": random.randrange(0, 2147483648, 104857600),
+                "cpu": random.randrange(1, 2, 1),
+                "memory": random.randrange(16, 256, 16),
             })
     return data
 
@@ -123,11 +123,11 @@ def gen_sql(data, table_name):
 
 if __name__ == "__main__":
     since = datetime.datetime.now() - datetime.timedelta(days=10)
-    orgs = gen_orgs(5)
+    orgs = gen_orgs(1)
     org_resources = gen_org_resources(orgs, since, 1)
-    tenants = gen_tenant(orgs, 20)
+    tenants = gen_tenant(orgs, 1)
     tenant_resources = gen_tenant_resources(tenants, since, 1)
-    spaces = gen_spaces(tenants, 100)
+    spaces = gen_spaces(tenants, 2)
     space_resources = gen_space_resources(spaces, since, 1)
     space_usage = gen_space_usage(spaces, since, 1)
 

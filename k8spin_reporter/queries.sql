@@ -200,3 +200,25 @@ LIMIT 24;
 
 
 -- WHERE organization_id = "d831bb55-b4fd-4971-8230-4fdd0141d3b2"
+
+
+-- Tenant CPU and Memory configurable
+
+SELECT * FROM tenant_resources WHERE
+tenant_id = "31fc7679-3ba5-4983-812d-f2340bc03233"
+ORDER BY id desc LIMIT 1;
+
+
+SELECT id FROM space WHERE
+tenant_id = "31fc7679-3ba5-4983-812d-f2340bc03233";
+
+
+SELECT * FROM space_resources WHERE
+space_id = "78aa18f1-4526-4d08-9720-5970e7259a81"
+ORDER BY id desc LIMIT 1;
+
+
+SELECT * FROM space_resources WHERE
+space_id = "26c13dbb-569e-414f-907a-ce473ac43f8a"
+ORDER BY id desc LIMIT 1;
+
