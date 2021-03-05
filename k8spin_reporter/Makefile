@@ -32,6 +32,10 @@ run: install kubeconfig
 kubeconfig: 
 	@kind get kubeconfig --name k8spin-operator > kubeconfig
 
-## resetdb: Reset the database
+## resetdb: Reset the database. Takes some time
 resetdb:
-	@rm -f k8spin.db && sqlite3 k8spin.db < schema.sql
+	@virtualenv -p python3.9 .venv
+	source .venv/bin/activate; \
+	pip install -r requirements-dev.txt; \
+	python gen.py > dataset.sql
+	@rm -f k8spin.db && sqlite3 k8spin.db < schema.sql && sqlite3 k8spin.db < dataset.sql
