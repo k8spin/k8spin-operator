@@ -4,7 +4,7 @@ from k8spin_reporter import db
 def orgs(db_engine):
     data = []
     query = f"""
-        SELECT id,name 
+        SELECT id,name
         FROM organization
     """
     rows = db.query(db_engine, query)
@@ -19,7 +19,7 @@ def orgs(db_engine):
 def org(db_engine, organization_id):
     data = []
     query = f"""
-        SELECT id,name 
+        SELECT id,name
         FROM organization
         WHERE
         id = "{organization_id}"
@@ -256,7 +256,7 @@ def tenant_history_resources(db_engine, organization_id, tenant_id):
 def tenants(db_engine, organization_id):
     data = []
     query = f"""
-        SELECT id,name 
+        SELECT id,name
         FROM tenant
         WHERE organization_id = "{organization_id}"
     """
@@ -272,7 +272,7 @@ def tenants(db_engine, organization_id):
 def tenant(db_engine, organization_id, tenant_id):
     data = []
     query = f"""
-        SELECT id,name 
+        SELECT id,name
         FROM tenant
         WHERE
         organization_id = "{organization_id}"
@@ -294,7 +294,7 @@ def tenant(db_engine, organization_id, tenant_id):
 def spaces(db_engine, tenant_id):
     data = []
     query = f"""
-        SELECT id,name 
+        SELECT id,name
         FROM space
         WHERE tenant_id = "{tenant_id}"
     """
@@ -307,12 +307,34 @@ def spaces(db_engine, tenant_id):
     return data
 
 
+def space(db_engine, tenant_id, space_id):
+    data = []
+    query = f"""
+        SELECT id,name
+        FROM space
+        WHERE
+        tenant_id = "{tenant_id}"
+        AND
+        id = "{space_id}"
+    """
+    rows = db.query(db_engine, query)
+    for r in rows:
+        data.append({
+            "id": r[0],
+            "name": r[1]
+        })
+    if len(data) == 1:
+        return data[0]
+    else:
+        raise Exception("TBD: Multiple results")
+
+
 def space_usage(db_engine, start_date, finish_date, space_id):
     data = []
     query = f"""
         SELECT
             space_id,
-            STRFTIME('%Y-%m-%d', reported) reported, 
+            STRFTIME('%Y-%m-%d', reported) reported,
             AVG(cpu) cpu
         FROM
             space_resources
@@ -327,5 +349,54 @@ def space_usage(db_engine, start_date, finish_date, space_id):
         data.append({
             "id": r[0],
             "name": r[1]
+        })
+    return data
+
+
+def space_history_resources(db_engine, organization_id, tenant_id, space_id):
+    data = []
+    query = f"""
+        SELECT used.day, allocated.allocated_cpu, used.used_cpu, allocated.allocated_memory, used.used_memory
+
+        FROM (
+
+            SELECT space_id, day, sum(cpu) as used_cpu, sum(memory) as used_memory
+            FROM (
+                SELECT space_id, strftime('%Y%m%d', reported) as day, avg(cpu) as cpu, avg(memory) as memory
+                FROM space_usage
+                WHERE
+                organization_id = "{organization_id}"
+                AND
+                tenant_id = "{tenant_id}"
+                AND
+                space_id = "{space_id}"
+                GROUP BY space_id, strftime('%Y%m%d', reported)
+            )
+            GROUP BY space_id, day
+
+        ) used,
+
+        (
+            SELECT space_id, strftime('%Y%m%d', reported) as day, avg(cpu) as allocated_cpu, avg(memory) as allocated_memory
+            FROM space_resources
+            WHERE space_id = "{space_id}"
+            GROUP BY space_id, strftime('%Y%m%d', reported)
+
+        ) allocated
+
+        WHERE used.space_id = "{space_id}"
+        AND used.space_id = allocated.space_id
+        AND used.day = allocated.day
+        ORDER BY used.day DESC
+        LIMIT 7;
+    """
+    rows = db.query(db_engine, query, False)
+    for r in rows:
+        data.append({
+            "day": r[0],
+            "allocated_cpu": r[1],
+            "used_cpu": r[2],
+            "allocated_memory": r[3],
+            "used_memory": r[4],
         })
     return data

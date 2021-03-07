@@ -11,39 +11,8 @@ function refresh() {
     if (tenant_id === "") {
         tenants(organization_id);
     } else {
-        tenant(organization_id, tenant_id);
+        one_tenant(organization_id, tenant_id);
     }
-}
-
-function tenant(organization_id, tenant_id) {
-    endpoint = "/api/organizations/" + organization_id + "/tenants/" + tenant_id
-    $.getJSON(endpoint, function (data) {
-        $("#tenant").empty();
-        tenant = data;
-        spaces_page_url = "/organizations/" + organization_id + "/tenants/" + tenant.id + "/spaces"
-        var new_box = "\
-            <div class=\"box\">\
-                <div class=\"columns\"> \
-                    <div class=\"column is-one-fifth\">\
-                        "+ tenant.name + "\
-                    </br>Spaces: <a href=\""+ spaces_page_url + "\"<i class=\"fas fa-info\"></i></a></div>\
-                    <div class=\"column\" id=\""+ tenant.id + "-resources\">\
-                    </div>\
-                    <div class=\"column\" id=\""+ tenant.id + "-cpu-history\">\
-                    </div>\
-                    <div class=\"column\" id=\""+ tenant.id + "-memory-history\">\
-                    </div>\
-                </div>\
-                <div class=\"columns\"> \
-                    <div class=\"column\" id=\""+ tenant.id + "-spaces\">\
-                    </div>\
-                </div>\
-            </div>";
-        $("#tenant").append(new_box);
-        tenant_resources(organization_id, tenant);
-        tenant_history(organization_id, tenant);
-        tenant_spaces(organization_id, tenant);
-    });
 }
 
 function tenants(organization_id) {
@@ -73,8 +42,39 @@ function tenants(organization_id) {
                 </div>";
             $("#tenant").append(new_box);
             tenant_resources(organization_id, tenant);
-            tenant_history(organization_id, tenant);            
+            tenant_history(organization_id, tenant);
         }
+    });
+}
+
+function one_tenant(organization_id, tenant_id) {
+    endpoint = "/api/organizations/" + organization_id + "/tenants/" + tenant_id
+    $.getJSON(endpoint, function (data) {
+        $("#tenant").empty();
+        tenant = data;
+        spaces_page_url = "/organizations/" + organization_id + "/tenants/" + tenant.id + "/spaces"
+        var new_box = "\
+            <div class=\"box\">\
+                <div class=\"columns\"> \
+                    <div class=\"column is-one-fifth\">\
+                        "+ tenant.name + "\
+                    </br>Spaces: <a href=\""+ spaces_page_url + "\"<i class=\"fas fa-info\"></i></a></div>\
+                    <div class=\"column\" id=\""+ tenant.id + "-resources\">\
+                    </div>\
+                    <div class=\"column\" id=\""+ tenant.id + "-cpu-history\">\
+                    </div>\
+                    <div class=\"column\" id=\""+ tenant.id + "-memory-history\">\
+                    </div>\
+                </div>\
+                <div class=\"columns\"> \
+                    <div class=\"column\" id=\""+ tenant.id + "-spaces\">\
+                    </div>\
+                </div>\
+            </div>";
+        $("#tenant").append(new_box);
+        tenant_resources(organization_id, tenant);
+        tenant_history(organization_id, tenant);
+        tenant_spaces(organization_id, tenant);
     });
 }
 
@@ -106,7 +106,7 @@ function tenant_spaces(organization_id, tenant) {
         tbody = ""
         for (var i = 0; i < data.length; i++) {
             space = data[i]
-            space_page_url = "organizations/" + organization_id + "/tenants/" + tenant.id + "/spaces/" + space.id
+            space_page_url = "/organizations/" + organization_id + "/tenants/" + tenant.id + "/spaces/" + space.id
             tbody = tbody + "\
             <tr>\
                 <td>"+ space.name + "</td>\

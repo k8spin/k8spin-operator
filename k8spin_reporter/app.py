@@ -26,6 +26,11 @@ def asyncFeed():
     feed.do_feed(db.engine)
 
 
+@app.route("/report")
+def report():
+    return render_template("report.html")
+
+
 @app.route("/organizations")
 def organizations():
     return render_template("organization.html")
@@ -46,9 +51,14 @@ def tenant(organization_id, tenant_id):
     return render_template("tenant.html", organization_id=organization_id, tenant_id=tenant_id)
 
 
-@app.route("/report")
-def report():
-    return render_template("report.html")
+@app.route("/organizations/<organization_id>/tenants/<tenant_id>/spaces")
+def spaces(organization_id, tenant_id):
+    return render_template("space.html", organization_id=organization_id, tenant_id=tenant_id)
+
+
+@app.route("/organizations/<organization_id>/tenants/<tenant_id>/spaces/<space_id>")
+def space(organization_id, tenant_id, space_id):
+    return render_template("space.html", organization_id=organization_id, tenant_id=tenant_id, space_id=space_id)
 
 
 @app.route("/api/organizations")
@@ -87,15 +97,28 @@ def api_tenant(organization_id, tenant_id):
     return jsonify(t)
 
 
+@app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/resources")
+def tenant_resources(organization_id, tenant_id):
+    resources = data.tenant_current_resources(db.engine, tenant_id)
+    return jsonify(resources)
+
+
 @app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/history")
 def tenant_history(organization_id, tenant_id):
-    resources = data.tenant_history_resources(db.engine, organization_id, tenant_id)
+    resources = data.tenant_history_resources(
+        db.engine, organization_id, tenant_id)
     return jsonify(resources)
 
 
 @app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/spaces")
-def spaces(organization_id, tenant_id):
+def api_spaces(organization_id, tenant_id):
     spaces = data.spaces(db.engine, tenant_id)
+    return jsonify(spaces)
+
+
+@app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/spaces/<space_id>")
+def api_space(organization_id, tenant_id, space_id):
+    spaces = data.space(db.engine, tenant_id, space_id)
     return jsonify(spaces)
 
 
@@ -105,9 +128,10 @@ def space_resources(organization_id, tenant_id, space_id):
     return jsonify(resources)
 
 
-@app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/resources")
-def tenant_resources(organization_id, tenant_id):
-    resources = data.tenant_current_resources(db.engine, tenant_id)
+@app.route("/api/organizations/<organization_id>/tenants/<tenant_id>/spaces/<space_id>/history")
+def space_history(organization_id, tenant_id, space_id):
+    resources = data.space_history_resources(
+        db.engine, organization_id, tenant_id, space_id)
     return jsonify(resources)
 
 
