@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block additional_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hello Bulma!</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<link href="{{ url_for('static', filename='css/all.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/space.js') }}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+<input id="tenant_id" name="tenant_id" type="hidden" value="{{ tenant_id }}">
+<input id="organization_id" name="organization_id" type="hidden" value="{{ organization_id }}">
+<input id="space_id" name="space_id" type="hidden" value="{{ space_id }}">
+<section class="section">
+
+    <div class="container" id="space">
+    </div>
+    <div class="container">
+        <button class="button" id="refresh">
+            Refresh
+        </button>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>K8Spin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    {% block additional_head %}{% endblock %}
+  </head>
+
+  <body>
+    <section class="content">
+      {% block content %}{% endblock %}
+    </section>
+  </body>
+
+</html>

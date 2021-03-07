@@ -1,6 +1,7 @@
 .venv-operator
 .venv-validator
 .venv-test
+.venv-chart-docs
 .venv
 .kube
 .pytest_cache

@@ -19,5 +19,15 @@ k8spin_webhook:
     create: true # Create the k8spin-webhook service account
     name: # The k8spin-webhook service account name
 
+k8spin_reporter:
+  image:
+    name: ghcr.io/k8spin/k8spin-reporter # k8spin-reporter image name
+    tag: v1.0.6 # k8spin-reporter image tag
+    pullPolicy: IfNotPresent # k8spin-reporter image pull policy
+  logging_level: DEBUG # k8spin-reporter logging level
+  serviceAccount:
+    create: true # Create the k8spin-reporter service account
+    name: # The k8spin-reporter service account name
+
 rbac:
   create: true # Deploys default roles

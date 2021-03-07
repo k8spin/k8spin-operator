@@ -21,6 +21,9 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     webhook_image = "ghcr.io/k8spin/k8spin-webhook:latest"
     kind_cluster.load_docker_image(webhook_image)
 
+    reporter_image = "ghcr.io/k8spin/k8spin-reporter:latest"
+    kind_cluster.load_docker_image(reporter_image)
+
     logging.info("Deploying Calico")
     kubectl("delete", "daemonset", "-n" "kube-system", "kindnet")
     kubectl("apply", "-f", "https://docs.projectcalico.org/v3.16/manifests/calico.yaml")
@@ -34,12 +37,13 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     logging.info("Deploying K8Spin CRDS")
     kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes/crds"))
 
-    logging.info("Deploying Operator and Validator")
+    logging.info("Deploying Operator, Validator and Reporter")
     kubectl("apply", "-f", str(Path(__file__).parent.parent.parent / "deployments/kubernetes"))
 
     logging.info("Waiting for rollout ...")
     kubectl("rollout", "status", "deployment/k8spin-webhook")
     kubectl("rollout", "status", "deployment/k8spin-operator")
+    kubectl("rollout", "status", "deployment/k8spin-reporter")
 
     # with kind_cluster.port_forward("service/kube-web-view", 80) as port:
     #     url = f"http://localhost:{port}/"
@@ -58,6 +62,11 @@ def cluster(kind_cluster) -> Generator[dict, None, None]:
     operator_logs_out = kubectl("logs", "deployments/k8spin-operator")
     operator_logs.write(operator_logs_out)
     operator_logs.close()
+
+    reporter_logs = open("e2elogs/reporter-logs.txt", "w")
+    reporter_logs_out = kubectl("logs", "deployments/k8spin-reporter")
+    reporter_logs.write(reporter_logs_out)
+    reporter_logs.close()
 
     custer_status_logs = open("e2elogs/cluster-status-logs.txt", "w")
     custer_status_out = kubectl("get", "all,org,tenant,space,ns", "-A")
