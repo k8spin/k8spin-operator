@@ -72,6 +72,11 @@ spec:
                               type: string
                             memory:
                               type: string
+                    enforcing:
+                      type: object
+                      properties:
+                        runtimeClassName:
+                            type: string
                 allowIncomingNetwork:
                   type: object
                   properties:
