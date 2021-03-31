@@ -207,3 +207,23 @@ webhooks:
         operations:
           - CREATE
           - UPDATE
+  - name: mutating.pods.k8spin.cloud
+    failurePolicy: Fail
+    objectSelector:
+      matchExpressions:
+        - {key: application, operator: NotIn, values: [k8spin-webhook, k8spin-operator]}
+    clientConfig:
+      service:
+        name: k8spin-webhook
+        namespace: default
+        path: /mutator/pods
+      caBundle: Cg==
+    rules:
+      - apiGroups: [""]
+        resources:
+          - "pods"
+        apiVersions:
+          - "v1"
+        operations:
+          - CREATE
+          - UPDATE
