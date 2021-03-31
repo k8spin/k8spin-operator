@@ -115,3 +115,7 @@ class Space(NamespacedAPIObject):
     @property
     def get_allow_incoming_network(self) -> list:
         return self.obj["spec"].get("allowIncomingNetwork", {})
+
+    @property
+    def runtime(self) -> str:
+        return self.obj["spec"]["containers"].get("enforcing", {}).get("runtimeClassName")
