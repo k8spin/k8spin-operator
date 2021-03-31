@@ -20,6 +20,7 @@ spec:
       containers:
       - name: k8spin-webhook
         image: ghcr.io/k8spin/k8spin-webhook:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443
         env:
