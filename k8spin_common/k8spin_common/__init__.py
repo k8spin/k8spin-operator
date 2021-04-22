@@ -118,4 +118,4 @@ class Space(NamespacedAPIObject):
 
     @property
     def runtime(self) -> str:
-        return self.obj["spec"]["containers"].get("enforcing", {}).get("runtimeClassName")
+        return self.obj["spec"]["containers"].get("enforce", {}).get("runtimeClassName")
