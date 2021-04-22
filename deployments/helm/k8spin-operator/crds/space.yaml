@@ -72,7 +72,7 @@ spec:
                               type: string
                             memory:
                               type: string
-                    enforcing:
+                    enforce:
                       type: object
                       properties:
                         runtimeClassName:
