@@ -8,6 +8,7 @@ from k8spin_common.resources import organization, tenant
 @kubernetes_api
 def lives_in_org_namespace(api, namespace, **_):
     parent_namespace = pykube.Namespace.objects(api).get(name=namespace)
+    # pylint: disable=E1120
     if parent_namespace.labels.get("k8spin.cloud/type", "") == "organization" and any(
             [owner.get('kind') == 'Organization'
                 for owner in parent_namespace.metadata.get('ownerReferences', list())]):

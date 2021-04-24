@@ -8,6 +8,7 @@ from k8spin_common.resources import space, tenant
 @kubernetes_api
 def lives_in_tenant_namespace(api, namespace, **_):
     parent_namespace = pykube.Namespace.objects(api).get(name=namespace)
+    # pylint: disable=E1120
     if parent_namespace.labels.get("k8spin.cloud/type", "") == "tenant" and any(
             [owner.get('kind') == 'Tenant'
              for owner in parent_namespace.metadata.get('ownerReferences', list())]):
