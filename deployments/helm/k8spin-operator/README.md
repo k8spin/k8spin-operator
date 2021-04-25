@@ -11,17 +11,17 @@ The following table lists the configurable parameters of the K8spin-operator cha
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `k8spin_operator.image.name` | K8spin-operator image name | `"ghcr.io/k8spin/k8spin-operator"` |
-| `k8spin_operator.image.tag` | K8spin-operator image tag | `"v1.0.6"` |
-| `k8spin_operator.image.pullPolicy` | K8spin-operator image pull policy | `"IfNotPresent"` |
-| `k8spin_operator.logging_level` | K8spin-operator logging level | `"DEBUG"` |
-| `k8spin_operator.reconciliation_interval_seconds` | K8spin-operator reconciliation interval in seconds | `"15"` |
+| `k8spin_operator.image.name` | k8spin-operator image name | `"ghcr.io/k8spin/k8spin-operator"` |
+| `k8spin_operator.image.tag` | k8spin-operator image tag | `"v1.1.0"` |
+| `k8spin_operator.image.pullPolicy` | k8spin-operator image pull policy | `"IfNotPresent"` |
+| `k8spin_operator.logging_level` | k8spin-operator logging level | `"DEBUG"` |
+| `k8spin_operator.reconciliation_interval_seconds` | k8spin-operator reconciliation interval in seconds | `"15"` |
 | `k8spin_operator.serviceAccount.create` | Create the k8spin-operator service account | `true` |
 | `k8spin_operator.serviceAccount.name` | The k8spin-operator service account name | `null` |
-| `k8spin_webhook.image.name` | K8spin-webhook image name | `"ghcr.io/k8spin/k8spin-webhook"` |
-| `k8spin_webhook.image.tag` | K8spin-webhook image tag | `"v1.0.6"` |
-| `k8spin_webhook.image.pullPolicy` | K8spin-webhook image pull policy | `"IfNotPresent"` |
-| `k8spin_webhook.logging_level` | K8spin-webhook logging level | `"DEBUG"` |
+| `k8spin_webhook.image.name` | k8spin-webhook image name | `"ghcr.io/k8spin/k8spin-webhook"` |
+| `k8spin_webhook.image.tag` | k8spin-webhook image tag | `"v1.1.0"` |
+| `k8spin_webhook.image.pullPolicy` | k8spin-webhook image pull policy | `"IfNotPresent"` |
+| `k8spin_webhook.logging_level` | k8spin-webhook logging level | `"DEBUG"` |
 | `k8spin_webhook.serviceAccount.create` | Create the k8spin-webhook service account | `true` |
 | `k8spin_webhook.serviceAccount.name` | The k8spin-webhook service account name | `null` |
 | `rbac.create` | Deploys default roles | `true` |
