@@ -48,11 +48,16 @@ class Tenant(NamespacedAPIObject):
     @property
     def tenant_namespace(self) -> Namespace:
         namespaces = Namespace.objects(self.api).filter(
-            selector={"k8spin.cloud/org": self.org.name, "k8spin.cloud/type": "tenant"})
+            selector={
+                "k8spin.cloud/org": self.org.name,
+                "k8spin.cloud/tenant": self.name,
+                "k8spin.cloud/type": "tenant"
+            })
+        matched_ns = list()
         for namespace in namespaces:
-            if any([owner.get("name") == self.name
-                    for owner in namespace.metadata.get("ownerReferences", list())]):
-                return namespace
+            matched_ns.append(namespace)
+        if len(matched_ns) == 1:
+            return matched_ns[0]
         # TODO CHANGE WITH K8SPIN EXCEPTIONS
         raise Exception("Tenant namespace not found")
 
@@ -92,11 +97,13 @@ class Space(NamespacedAPIObject):
         namespaces = Namespace.objects(self.api).filter(
             selector={"k8spin.cloud/org": self.org.name,
                       "k8spin.cloud/tenant": self.tenant.name,
+                      "k8spin.cloud/space": self.name,
                       "k8spin.cloud/type": "space"})
+        matched_ns = list()
         for namespace in namespaces:
-            if any([owner.get("name") == self.name
-                    for owner in namespace.metadata.get("ownerReferences", list())]):
-                return namespace
+            matched_ns.append(namespace)
+        if len(matched_ns) == 1:
+            return matched_ns[0]
         # TODO CHANGE WITH K8SPIN EXCEPTIONS
         raise Exception("Space namespace not found")
 
