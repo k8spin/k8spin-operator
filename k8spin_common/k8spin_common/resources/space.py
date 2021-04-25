@@ -1,11 +1,10 @@
-import pykube
-
 import k8spin_common
+import pykube
 from k8spin_common.helper import adopt, ensure, kubernetes_api
 from k8spin_common.resources.namespace import create_namespace
+from k8spin_common.resources.network_policies import create_network_policy
 from k8spin_common.resources.quotas import (create_limit_range,
                                             create_resource_quota)
-from k8spin_common.resources.network_policies import create_network_policy
 from k8spin_common.resources.rbac import (create_cluster_role_binding,
                                           create_role_binding)
 from k8spin_common.resources.tenant import tenant_namespacename_generator

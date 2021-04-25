@@ -40,7 +40,8 @@ def _get_kube_api():
 
 def ensure(resource: APIObject, owner: APIObject):
     if not resource.exists():
-        resource = adopt(owner, resource)
+        if owner.namespace == resource.namespace:
+            resource = adopt(owner, resource)
         resource.create()
     else:
         resource.update()
