@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 
 PROJECTNAME=$(shell basename "$(PWD)")
-CLUSTER_VERSION="1.18.8"
+CLUSTER_VERSION="1.20.2"
 KIND_CLUSTER_NAME="k8spin-operator"
 PYTEST_PARAMS=""
 TAG_VERSION="v1.1.0"
@@ -49,7 +49,7 @@ update: load
 
 ## test-e2e: End-to-End tests. Use `PYTEST_ADDOPTS=--keep-cluster make test-e2e` to keep cluster --workers auto could be added when we want multiple workers installing the package pytest-parallel
 test-e2e: build
-	@virtualenv -p python3.8 .venv-test
+	@virtualenv -p python3.9 .venv-test
 	source .venv-test/bin/activate; \
 	pip install -r test/requirements.txt; \
 	pip install -e k8spin_common; \
@@ -101,7 +101,7 @@ lint:
 
 ## helm_chart_docs: Creates the Helm Chart Docs
 helm_chart_docs:
-	@virtualenv -p python3.8 .venv-chart-docs
+	@virtualenv -p python3.9 .venv-chart-docs
 	source .venv-chart-docs/bin/activate; \
 	pip install frigate; \
 	frigate gen deployments/helm/k8spin-operator > deployments/helm/k8spin-operator/README.md;
