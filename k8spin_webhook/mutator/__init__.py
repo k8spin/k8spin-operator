@@ -2,7 +2,7 @@ import base64
 
 import jsonpatch
 from flask import Blueprint, jsonify, request
-from k8spin_common.resources import tenant, space
+from k8spin_common.resources import space, tenant
 from loguru import logger
 
 blueprint = Blueprint("mutator", __name__, url_prefix="/mutator")
@@ -66,6 +66,7 @@ def space_mutator():
 def pod_mutator():
     request_info = request.get_json()
     try:
+        # pylint: disable=E1120
         parent_space = space.get_space_from_namespace(
             space_namespace_name=request_info["request"]["namespace"])
     except KeyError: # Not a k8spin managed namespace
@@ -77,5 +78,4 @@ def pod_mutator():
                                     "value": parent_space.runtime
                                     }])
         return mutator_response(True, "", patch)
-    else:
-        return jsonify({"response": {"allowed": True}})
+    return jsonify({"response": {"allowed": True}})

@@ -31,6 +31,7 @@ def ensure_space_resources(organization: k8spin_common.Organization, tenant: k8s
     ensure_space_network_policies(
         organization=organization, tenant=tenant, space_name=space_name)
 
+
 @kubernetes_api
 def ensure_space_namespace(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):
     space_namespace_name = space_namespacename_generator(
@@ -83,6 +84,7 @@ def ensure_space_limit_range(api, organization: k8spin_common.Organization, tena
     space_limit_range = ensure(space_limit_range, space)
     return space_limit_range
 
+
 @kubernetes_api
 def ensure_space_network_policies(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):
     space = get_space(space_name, tenant.name, organization.name)
@@ -98,6 +100,7 @@ def ensure_space_network_policies(api, organization: k8spin_common.Organization,
         "defaults", space_namespace.name, labels, allow_incoming_network)
     space_network_policy = ensure(space_network_policy, space)
     return space_network_policy
+
 
 @kubernetes_api
 def ensure_space_role_bindings(api, organization: k8spin_common.Organization, tenant: k8spin_common.Tenant, space_name: str):
@@ -119,8 +122,10 @@ def ensure_space_role_bindings(api, organization: k8spin_common.Organization, te
                 target_kind = "User"
                 targets = role.get('users', list())
         for target in targets:
-            target_namespace = target.split(":")[0] if target_kind == "ServiceAccount" else None
-            target = target.split(":")[1] if target_kind == "ServiceAccount" else target
+            target_namespace = target.split(
+                ":")[0] if target_kind == "ServiceAccount" else None
+            target = target.split(
+                ":")[1] if target_kind == "ServiceAccount" else target
             rolebinding_name = f"{space_name}-{name}-{target_kind.lower()}-{target.lower()}"
             labels = {
                 "k8spin.cloud/type": "role",
