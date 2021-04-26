@@ -8,15 +8,19 @@ from loguru import logger
 blueprint = Blueprint("mutator", __name__, url_prefix="/mutator")
 
 
-def mutator_response(allowed, message, json_patch):
-    base64_patch = None
+def mutator_response(uid, allowed, message, json_patch=None):
+    review = {"apiVersion": "admission.k8s.io/v1",
+              "kind": "AdmissionReview",
+              "response": {"uid": uid,
+                           "allowed": allowed,
+                           "status": {"message": message}}
+              }
     if json_patch:
         base64_patch = base64.b64encode(
             json_patch.to_string().encode("utf-8")).decode("utf-8")
-    return jsonify({"response": {"allowed": allowed,
-                                 "status": {"message": message},
-                                 "patchType": "JSONPatch",
-                                 "patch": base64_patch}})
+        review["response"]["patchType"] = "JSONPatch"
+        review["response"]["patch"] = base64_patch
+    return jsonify(review)
 
 
 @blueprint.route('/organizations', methods=['POST'])
@@ -26,7 +30,7 @@ def organization_mutator():
     patch = jsonpatch.JsonPatch([{"op": "add",
                                   "path": "/metadata/labels",
                                   "value": {"k8spin.cloud/org": organization_name}}])
-    return mutator_response(True, "", patch)
+    return mutator_response(request_info["request"]["uid"], True, "", patch)
 
 
 @blueprint.route('/tenants', methods=['POST'])
@@ -41,7 +45,7 @@ def tenant_mutator():
                                       "k8spin.cloud/tenant": request_info["request"]["name"]
                                   }
                                   }])
-    return mutator_response(True, "", patch)
+    return mutator_response(request_info["request"]["uid"], True, "", patch)
 
 
 @blueprint.route('/spaces', methods=['POST'])
@@ -59,7 +63,7 @@ def space_mutator():
                                       "k8spin.cloud/space": request_info["request"]["name"]
                                   }
                                   }])
-    return mutator_response(True, "", patch)
+    return mutator_response(request_info["request"]["uid"], True, "", patch)
 
 
 @blueprint.route('/pods', methods=['POST'])
@@ -69,13 +73,13 @@ def pod_mutator():
         # pylint: disable=E1120
         parent_space = space.get_space_from_namespace(
             space_namespace_name=request_info["request"]["namespace"])
-    except KeyError: # Not a k8spin managed namespace
-        return jsonify({"response": {"allowed": True}})
+    except KeyError:  # Not a k8spin managed namespace
+        return mutator_response(request_info["request"]["uid"], True, "")
     if parent_space.runtime is not None:
         patch = jsonpatch.JsonPatch([
                                     {"op": "add",
-                                    "path": "/spec/runtimeClassName",
-                                    "value": parent_space.runtime
-                                    }])
-        return mutator_response(True, "", patch)
-    return jsonify({"response": {"allowed": True}})
+                                     "path": "/spec/runtimeClassName",
+                                     "value": parent_space.runtime
+                                     }])
+        return mutator_response(request_info["request"]["uid"], True, "", patch)
+    return mutator_response(request_info["request"]["uid"], True, "")

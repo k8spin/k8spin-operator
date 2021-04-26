@@ -58,6 +58,11 @@ jobs:
         linux-amd64/helm registry login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}" ghcr.io
         linux-amd64/helm chart save deployments/helm/k8spin-operator ghcr.io/k8spin/k8spin-operator-chart:${GITHUB_REF##*/}
         linux-amd64/helm chart push ghcr.io/k8spin/k8spin-operator-chart:${GITHUB_REF##*/}
+    - run: |
+        export VERSION=${GITHUB_REF##*/}
+        echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+        export CURRENT_DATE=$(date --iso-8601=seconds)
+        echo "RELEASE_DATE=$CURRENT_DATE" >> $GITHUB_ENV
     - name: Create k8spin krew package
       run: |
         cp kubectl-k8spin.py kubectl-k8spin
@@ -66,7 +71,6 @@ jobs:
         export SHA256=$(sha256sum kubectl-k8spin.tar.gz | awk '{print $1'})
         export VERSION=${GITHUB_REF##*/}
         envsubst < plugins/template/k8spin.tpl.yaml > plugins/k8spin.yaml
-        echo "::set-env name=RELEASE_VERSION::$VERSION"
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1

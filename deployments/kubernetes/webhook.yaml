@@ -106,7 +106,7 @@ metadata:
 spec:
   selfSigned: {}
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
@@ -116,6 +116,9 @@ metadata:
 webhooks:
   - name: validating.tenants.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     clientConfig:
       service:
         name: k8spin-webhook
@@ -133,6 +136,9 @@ webhooks:
           - UPDATE
   - name: validating.spaces.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     clientConfig:
       service:
         name: k8spin-webhook
@@ -149,7 +155,7 @@ webhooks:
           - CREATE
           - UPDATE
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   annotations:
@@ -159,6 +165,9 @@ metadata:
 webhooks:
   - name: mutating.organizations.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     clientConfig:
       service:
         name: k8spin-webhook
@@ -176,6 +185,9 @@ webhooks:
           - UPDATE
   - name: mutating.tenants.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     clientConfig:
       service:
         name: k8spin-webhook
@@ -193,6 +205,9 @@ webhooks:
           - UPDATE
   - name: mutating.spaces.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     clientConfig:
       service:
         name: k8spin-webhook
@@ -210,6 +225,9 @@ webhooks:
           - UPDATE
   - name: mutating.pods.k8spin.cloud
     failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 5
     objectSelector:
       matchExpressions:
         - {key: application, operator: NotIn, values: [k8spin-webhook, k8spin-operator]}
