@@ -94,7 +94,7 @@ jobs:
         asset_name: kubectl-k8spin.tar.gz
         asset_content_type: application/tar+gzip
     - name: Push krew manifest
-      uses: github-actions-x/commit@v2.7
+      uses: github-actions-x/commit@v2.9
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         push-branch: master
