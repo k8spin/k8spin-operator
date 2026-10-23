@@ -1,2 +1,2 @@
-kopf==1.32.1
+kopf==1.45.2
 pykube-ng
